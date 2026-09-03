@@ -81,37 +81,37 @@ jobs:
   # ------------------------------------------------------------------
   # Job 2: 发布全部分包到 TestPyPI
   # ------------------------------------------------------------------
-  publish-testpypi-packages:
-    needs: build
-    runs-on: ubuntu-latest
-    environment: testpypi
-    strategy:
-      fail-fast: false
-      matrix:
-        package:
-          - zhuzhe-cloudrobo-core
-          - zhuzhe-cloudrobo-asset
-          - zhuzhe-cloudrobo-dataset
-          - zhuzhe-cloudrobo-train
-          - zhuzhe-cloudrobo-eval
-          - zhuzhe-cloudrobo-infer
-          - zhuzhe-cloudrobo-dispatch
-          - zhuzhe-cloudrobo-workspace
-          - zhuzhe-cloudrobo-resource
-          - zhuzhe-cloudrobo-robot
-          - zhuzhe-cloudrobo-r2c
-
-    steps:
-      - name: Download build artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: dist-${{ matrix.package }}
-          path: dist/
-
-      - name: Publish ${{ matrix.package }} to TestPyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          repository-url: https://test.pypi.org/legacy/
+#  publish-testpypi-packages:
+#    needs: build
+#    runs-on: ubuntu-latest
+#    environment: testpypi
+#    strategy:
+#      fail-fast: false
+#      matrix:
+#        package:
+#          - zhuzhe-cloudrobo-core
+#          - zhuzhe-cloudrobo-asset
+#          - zhuzhe-cloudrobo-dataset
+#          - zhuzhe-cloudrobo-train
+#          - zhuzhe-cloudrobo-eval
+#          - zhuzhe-cloudrobo-infer
+#          - zhuzhe-cloudrobo-dispatch
+#          - zhuzhe-cloudrobo-workspace
+#          - zhuzhe-cloudrobo-resource
+#          - zhuzhe-cloudrobo-robot
+#          - zhuzhe-cloudrobo-r2c
+#
+#    steps:
+#      - name: Download build artifacts
+#        uses: actions/download-artifact@v4
+#        with:
+#          name: dist-${{ matrix.package }}
+#          path: dist/
+#
+#      - name: Publish ${{ matrix.package }} to TestPyPI
+#        uses: pypa/gh-action-pypi-publish@release/v1
+#        with:
+#          repository-url: https://test.pypi.org/legacy/
 
   # ------------------------------------------------------------------
   # Job 3: 发布主包到 TestPyPI（分包发完再发）
@@ -136,35 +136,35 @@ jobs:
   # ------------------------------------------------------------------
   # Job 4: 发布全部分包到 PyPI（TestPyPI 全部成功后）
   # ------------------------------------------------------------------
-  publish-pypi-packages:
-    needs: publish-testpypi-main
-    runs-on: ubuntu-latest
-    environment: pypi
-    strategy:
-      fail-fast: false
-      matrix:
-        package:
-          - zhuzhe-cloudrobo-core
-          - zhuzhe-cloudrobo-asset
-          - zhuzhe-cloudrobo-dataset
-          - zhuzhe-cloudrobo-train
-          - zhuzhe-cloudrobo-eval
-          - zhuzhe-cloudrobo-infer
-          - zhuzhe-cloudrobo-dispatch
-          - zhuzhe-cloudrobo-workspace
-          - zhuzhe-cloudrobo-resource
-          - zhuzhe-cloudrobo-robot
-          - zhuzhe-cloudrobo-r2c
-
-    steps:
-      - name: Download build artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: dist-${{ matrix.package }}
-          path: dist/
-
-      - name: Publish ${{ matrix.package }} to PyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
+#  publish-pypi-packages:
+#    needs: publish-testpypi-main
+#    runs-on: ubuntu-latest
+#    environment: pypi
+#    strategy:
+#      fail-fast: false
+#      matrix:
+#        package:
+#          - zhuzhe-cloudrobo-core
+#          - zhuzhe-cloudrobo-asset
+#          - zhuzhe-cloudrobo-dataset
+#          - zhuzhe-cloudrobo-train
+#          - zhuzhe-cloudrobo-eval
+#          - zhuzhe-cloudrobo-infer
+#          - zhuzhe-cloudrobo-dispatch
+#          - zhuzhe-cloudrobo-workspace
+#          - zhuzhe-cloudrobo-resource
+#          - zhuzhe-cloudrobo-robot
+#          - zhuzhe-cloudrobo-r2c
+#
+#    steps:
+#      - name: Download build artifacts
+#        uses: actions/download-artifact@v4
+#        with:
+#          name: dist-${{ matrix.package }}
+#          path: dist/
+#
+#      - name: Publish ${{ matrix.package }} to PyPI
+#        uses: pypa/gh-action-pypi-publish@release/v1
 
   # ------------------------------------------------------------------
   # Job 5: 发布主包到 PyPI（分包发完再发）
