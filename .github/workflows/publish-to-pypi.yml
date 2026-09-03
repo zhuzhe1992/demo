@@ -117,7 +117,7 @@ jobs:
   # Job 3: 发布主包到 TestPyPI（分包发完再发）
   # ------------------------------------------------------------------
   publish-testpypi-main:
-    needs: [build, publish-testpypi-packages]
+    needs: [build]
     runs-on: ubuntu-latest
     environment: testpypi
 
@@ -170,7 +170,7 @@ jobs:
   # Job 5: 发布主包到 PyPI（分包发完再发）
   # ------------------------------------------------------------------
   publish-pypi-main:
-    needs: publish-pypi-packages
+    needs: publish-testpypi-main
     runs-on: ubuntu-latest
     environment: pypi
 
