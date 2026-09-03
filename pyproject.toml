@@ -1,27 +1,72 @@
-# ============================================================
-# 根 pyproject.toml — 仅用于开发工具配置，不发布到 PyPI
-# ============================================================
-
 [build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+requires = ["setuptools==83.0.0", "packaging==26.2", "wheel"]
+build-backend = "setuptools.build_meta"
 
 [project]
-name = "demo-monorepo"
-version = "0.0.0"
-description = "Demo Python monorepo"
-requires-python = ">=3.9"
-
-[project.optional-dependencies]
-dev = [
-    "build>=1.0",
-    "pytest>=8.0",
-    "hatchling>=1.0",
+name = "hw-cloudrobo-client"
+version = "0.8.4"
+description = "CloudRobo Client - All Packages Bundle"
+requires-python = ">=3.8"
+authors = [
+    {name = "Huawei Cloud CloudRobo Team", email = "hwcloudrobo@huawei.com"},
+]
+maintainers = [
+    {name = "Huawei Cloud CloudRobo Team", email = "hwcloudrobo@huawei.com"},
+]
+license = {text = "Apache-2.0"}
+readme = "README.md"
+keywords = [
+    "cloudrobo",
+    "embodied-ai",
+    "robotics",
+    "huawei-cloud",
+    "sdk",
+    "cli",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+dependencies = [
+    "hw-cloudrobo-client-core==0.8.4",
+    "hw-cloudrobo-client-asset==0.8.4",
+    "hw-cloudrobo-client-dataset==0.8.4",
+    "hw-cloudrobo-client-train==0.8.4",
+    "hw-cloudrobo-client-eval==0.8.4",
+    "hw-cloudrobo-client-infer==0.8.4",
+    "hw-cloudrobo-client-dispatch==0.8.4",
+    "hw-cloudrobo-client-workspace==0.8.4",
+    "hw-cloudrobo-client-resource==0.8.4",
+    "hw-cloudrobo-client-robot==0.8.4",
+    "hw-cloudrobo-client-r2c==0.8.4",
 ]
 
-[tool.pytest.ini_options]
-testpaths = ["packages/*/tests"]
+[project.urls]
+Homepage = "https://github.com/HuaweiCloud/CloudRobo-Client"
+Repository = "https://github.com/HuaweiCloud/CloudRobo-Client"
+Issues = "https://github.com/HuaweiCloud/CloudRobo-Client/issues"
+Changelog = "https://github.com/HuaweiCloud/CloudRobo-Client/blob/master/CHANGELOG.md"
+
+[tool.setuptools]
+packages = []
 
 [tool.ruff]
 line-length = 100
-target-version = "py39"
+target-version = "py38"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]
+ignore = [
+    "E501",  # line length handled by formatter
+]
+
+[tool.black]
+line-length = 100
+target-version = ["py38", "py39", "py310", "py311", "py312"]
