@@ -39,19 +39,19 @@ jobs:
       matrix:
         include:
           # ---- 分包（packages/ 目录）----
-          - { name: cloudrobo-core,      dir: packages/cloudrobo-core }
-          - { name: cloudrobo-asset,     dir: packages/cloudrobo-asset }
-          - { name: cloudrobo-dataset,   dir: packages/cloudrobo-dataset }
-          - { name: cloudrobo-train,     dir: packages/cloudrobo-train }
-          - { name: cloudrobo-eval,      dir: packages/cloudrobo-eval }
-          - { name: cloudrobo-infer,     dir: packages/cloudrobo-infer }
-          - { name: cloudrobo-dispatch,  dir: packages/cloudrobo-dispatch }
-          - { name: cloudrobo-workspace, dir: packages/cloudrobo-workspace }
-          - { name: cloudrobo-resource,  dir: packages/cloudrobo-resource }
-          - { name: cloudrobo-robot,     dir: packages/cloudrobo-robot }
-          - { name: cloudrobo-r2c,       dir: packages/cloudrobo-r2c }
+          - { name: zhuzhe-cloudrobo-core,      dir: packages/cloudrobo-core }
+          - { name: zhuzhe-cloudrobo-asset,     dir: packages/cloudrobo-asset }
+          - { name: zhuzhe-cloudrobo-dataset,   dir: packages/cloudrobo-dataset }
+          - { name: zhuzhe-cloudrobo-train,     dir: packages/cloudrobo-train }
+          - { name: zhuzhe-cloudrobo-eval,      dir: packages/cloudrobo-eval }
+          - { name: zhuzhe-cloudrobo-infer,     dir: packages/cloudrobo-infer }
+          - { name: zhuzhe-cloudrobo-dispatch,  dir: packages/cloudrobo-dispatch }
+          - { name: zhuzhe-cloudrobo-workspace, dir: packages/cloudrobo-workspace }
+          - { name: zhuzhe-cloudrobo-resource,  dir: packages/cloudrobo-resource }
+          - { name: zhuzhe-cloudrobo-robot,     dir: packages/cloudrobo-robot }
+          - { name: zhuzhe-cloudrobo-r2c,       dir: packages/cloudrobo-r2c }
           # ---- 主包（根目录，bundle 所有分包）----
-          - { name: hw-cloudrobo-client, dir: . }
+          - { name: zhuzhe-cloudrobo-client, dir: . }
 
     steps:
       - uses: actions/checkout@v4
@@ -89,17 +89,17 @@ jobs:
       fail-fast: false
       matrix:
         package:
-          - cloudrobo-core
-          - cloudrobo-asset
-          - cloudrobo-dataset
-          - cloudrobo-train
-          - cloudrobo-eval
-          - cloudrobo-infer
-          - cloudrobo-dispatch
-          - cloudrobo-workspace
-          - cloudrobo-resource
-          - cloudrobo-robot
-          - cloudrobo-r2c
+          - zhuzhe-cloudrobo-core
+          - zhuzhe-cloudrobo-asset
+          - zhuzhe-cloudrobo-dataset
+          - zhuzhe-cloudrobo-train
+          - zhuzhe-cloudrobo-eval
+          - zhuzhe-cloudrobo-infer
+          - zhuzhe-cloudrobo-dispatch
+          - zhuzhe-cloudrobo-workspace
+          - zhuzhe-cloudrobo-resource
+          - zhuzhe-cloudrobo-robot
+          - zhuzhe-cloudrobo-r2c
 
     steps:
       - name: Download build artifacts
@@ -125,10 +125,10 @@ jobs:
       - name: Download build artifacts
         uses: actions/download-artifact@v4
         with:
-          name: dist-hw-cloudrobo-client
+          name: dist-zhuzhe-cloudrobo-client
           path: dist/
 
-      - name: Publish hw-cloudrobo-client to TestPyPI
+      - name: Publish zhuzhe-cloudrobo-client to TestPyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           repository-url: https://test.pypi.org/legacy/
@@ -144,17 +144,17 @@ jobs:
       fail-fast: false
       matrix:
         package:
-          - cloudrobo-core
-          - cloudrobo-asset
-          - cloudrobo-dataset
-          - cloudrobo-train
-          - cloudrobo-eval
-          - cloudrobo-infer
-          - cloudrobo-dispatch
-          - cloudrobo-workspace
-          - cloudrobo-resource
-          - cloudrobo-robot
-          - cloudrobo-r2c
+          - zhuzhe-cloudrobo-core
+          - zhuzhe-cloudrobo-asset
+          - zhuzhe-cloudrobo-dataset
+          - zhuzhe-cloudrobo-train
+          - zhuzhe-cloudrobo-eval
+          - zhuzhe-cloudrobo-infer
+          - zhuzhe-cloudrobo-dispatch
+          - zhuzhe-cloudrobo-workspace
+          - zhuzhe-cloudrobo-resource
+          - zhuzhe-cloudrobo-robot
+          - zhuzhe-cloudrobo-r2c
 
     steps:
       - name: Download build artifacts
@@ -178,8 +178,8 @@ jobs:
       - name: Download build artifacts
         uses: actions/download-artifact@v4
         with:
-          name: dist-hw-cloudrobo-client
+          name: dist-zhuzhe-cloudrobo-client
           path: dist/
 
-      - name: Publish hw-cloudrobo-client to PyPI
+      - name: Publish zhuzhe-cloudrobo-client to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1

@@ -3,7 +3,7 @@ requires = ["setuptools==83.0.0", "packaging==26.2", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "cloudrobo-asset"
+name = "zhuzhe-cloudrobo-asset"
 version = "0.1.0"
 description = "CloudRobo Asset Management SDK and CLI"
 requires-python = ">=3.8"
@@ -24,7 +24,7 @@ classifiers = [
 ]
 dependencies = [
     "click>=8.0",
-    "cloudrobo-core>=0.1.0",
+    "zhuzhe-cloudrobo-core>=0.1.0",
 ]
 
 [project.entry-points."cloudrobo.groups"]

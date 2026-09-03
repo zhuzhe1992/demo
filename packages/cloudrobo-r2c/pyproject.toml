@@ -3,7 +3,7 @@ requires = ["setuptools>=80", "grpcio-tools==1.80.0", "build"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "cloudrobo-r2c"
+name = "zhuzhe-cloudrobo-r2c"
 version = "0.1.0"
 description = "CloudRobo Robot-to-Cloud (R2C) data-plane SDK with Zenoh transport"
 readme = "README.md"
@@ -26,7 +26,7 @@ classifiers = [
 dependencies = [
     "PyYAML>=6.0",
     "click>=8.0",
-    "cloudrobo-core>=0.1.0",
+    "zhuzhe-cloudrobo-core>=0.1.0",
     "pydantic>=2.0",
 ]
 
@@ -58,7 +58,7 @@ flexiv = [
 ]
 jaka = ["scipy>=1.13,<2.0"]
 a1z = ["python-can>=4.0", "pin"]
-all = ["cloudrobo-r2c[client,cloud-adapter,ur5e,flexiv,jaka,a1z]"]
+all = ["zhuzhe-cloudrobo-r2c[client,cloud-adapter,ur5e,flexiv,jaka,a1z]"]
 
 [dependency-groups]
 dev = [

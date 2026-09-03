@@ -3,7 +3,7 @@ requires = ["setuptools==83.0.0", "packaging==26.2", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "hw-cloudrobo-client"
+name = "zhuzhe-cloudrobo-client"
 version = "0.8.4"
 description = "CloudRobo Client - All Packages Bundle"
 requires-python = ">=3.8"
@@ -35,17 +35,17 @@ classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 dependencies = [
-    "hw-cloudrobo-client-core==0.8.4",
-    "hw-cloudrobo-client-asset==0.8.4",
-    "hw-cloudrobo-client-dataset==0.8.4",
-    "hw-cloudrobo-client-train==0.8.4",
-    "hw-cloudrobo-client-eval==0.8.4",
-    "hw-cloudrobo-client-infer==0.8.4",
-    "hw-cloudrobo-client-dispatch==0.8.4",
-    "hw-cloudrobo-client-workspace==0.8.4",
-    "hw-cloudrobo-client-resource==0.8.4",
-    "hw-cloudrobo-client-robot==0.8.4",
-    "hw-cloudrobo-client-r2c==0.8.4",
+    "zhuzhe-cloudrobo-core==0.1.0",
+    "zhuzhe-cloudrobo-asset==0.1.0",
+    "zhuzhe-cloudrobo-dataset==0.1.0",
+    "zhuzhe-cloudrobo-train==0.1.0",
+    "zhuzhe-cloudrobo-eval==0.1.0",
+    "zhuzhe-cloudrobo-infer==0.1.0",
+    "zhuzhe-cloudrobo-dispatch==0.1.0",
+    "zhuzhe-cloudrobo-workspace==0.1.0",
+    "zhuzhe-cloudrobo-resource==0.1.0",
+    "zhuzhe-cloudrobo-robot==0.1.0",
+    "zhuzhe-cloudrobo-r2c==0.1.0",
 ]
 
 [project.urls]
