@@ -48,6 +48,12 @@ export HUAWEI_CLOUD_AK="your-access-key"
 export HUAWEI_CLOUD_SK="your-secret-key"
 ```
 
+```powershell
+# PowerShell
+$env:HUAWEI_CLOUD_AK="your-access-key"
+$env:HUAWEI_CLOUD_SK="your-secret-key"
+```
+
 ### Initialize user config (optional)
 
 ```bash

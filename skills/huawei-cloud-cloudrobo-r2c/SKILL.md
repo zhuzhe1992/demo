@@ -20,7 +20,10 @@ tags:
   - edge-client
 ---
 
-# cloudrobo-r2c
+> **Windows / PowerShell:** Examples use bash syntax. To run on Windows PowerShell:
+> - Flatten `\` line continuations to a single line, or end lines with a backtick.
+> - Set env vars with `$env:NAME="value"` instead of `export NAME="value"`.
+> - Single-quoted JSON `'{"a":"b"}'` works as-is.
 
 ## Overview 概述
 
@@ -91,9 +94,7 @@ Scenario: "Start the R2C client on the robot to stream observations and execute 
 
 1. **Start the client** — Launch the edge client with the credential bundle and robot config:
    ```bash
-   cloudrobo r2c client \
-     --bundle <path/to/credential_bundle.zip> \
-     --robot-config config/robot_dummy_config.yaml
+   cloudrobo r2c client --bundle <path/to/credential_bundle.zip> --robot-config config/robot_dummy_config.yaml
    ```
    If the private key is encrypted, you will be prompted for a password (or use
    `--private-key-password` / `--private-key-password-env`).
@@ -166,8 +167,7 @@ The R2C SDK provides two approaches for custom adapters: **entry_point registrat
 
 Scenario: "Record observations for later playback analysis."
 
-1. **Start with --record** — `cloudrobo r2c client --bundle <bundle> --robot-config <config> \
-   --record ./observations.pkl`
+1. **Start with --record** — `cloudrobo r2c client --bundle <bundle> --robot-config <config> --record ./observations.pkl`
 2. **Operate** — Run the robot normally; observations are serialized to the `.pkl` file.
 3. **Playback** — Use the `playback` adapter type with the recorded file for replay.
 
@@ -193,31 +193,13 @@ cloudrobo r2c client [OPTIONS]
 ### Start Robot Edge Client
 
 ```bash
-cloudrobo r2c client \
-  --bundle <path/to/credential_bundle.zip> \
-  --robot-config config/robot_dummy_config.yaml \
-  [--client-config config/client_config.yaml] \
-  [--duration 0] \
-  [--log-level INFO] \
-  [--log-file ./r2c.log] \
-  [--record ./observations.pkl] \
-  [--hardware-class my_pkg.my_module.MyAdapter] \
-  [--translator-class my_pkg.my_module.MyTranslator] \
-  [--private-key-password <password>] \
-  [--private-key-password-env <ENV_VAR>] \
-  [--no-prompt-password]
+cloudrobo r2c client --bundle <path/to/credential_bundle.zip> --robot-config config/robot_dummy_config.yaml [--client-config config/client_config.yaml] [--duration 0] [--log-level INFO] [--log-file ./r2c.log] [--record ./observations.pkl] [--hardware-class my_pkg.my_module.MyAdapter] [--translator-class my_pkg.my_module.MyTranslator] [--private-key-password <password>] [--private-key-password-env <ENV_VAR>] [--no-prompt-password]
 ```
 
 Alternative (without bundle, using client config + explicit parameters):
 
 ```bash
-cloudrobo r2c client \
-  --client-config config/client_config.yaml \
-  --project-id <project-id> \
-  --device-id <device-id> \
-  --endpoints tls/127.0.0.1:7447 \
-  --mode peer \
-  --robot-config config/robot_dummy_config.yaml
+cloudrobo r2c client --client-config config/client_config.yaml --project-id <project-id> --device-id <device-id> --endpoints tls/127.0.0.1:7447 --mode peer --robot-config config/robot_dummy_config.yaml
 ```
 
 **Connection priority:** `--bundle` (recommended) > `--client-config` > explicit CLI params

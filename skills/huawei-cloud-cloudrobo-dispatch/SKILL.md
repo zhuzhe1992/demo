@@ -18,7 +18,10 @@ tags:
   - task-dispatch
 ---
 
-# cloudrobo-dispatch
+> **Windows / PowerShell:** Examples use bash syntax. To run on Windows PowerShell:
+> - Flatten `\` line continuations to a single line, or end lines with a backtick.
+> - Set env vars with `$env:NAME="value"` instead of `export NAME="value"`.
+> - Single-quoted JSON `'{"a":"b"}'` works as-is.
 
 ## Overview
 
@@ -117,8 +120,7 @@ Scenario: "Tell robot A to go pick up the red cube and place it in the bin."
    the `task` text MUST match the predefined skill prompt; otherwise the service rejects it.** (See
    `cloudrobo-infer` for deploying a service with `skill_config.strict`.)
 5. **Create task with stop condition** —
-   `cloudrobo dispatch create-task --session-id <sid> --name <name> --task "<task>" \
-   --constraints-json '<json>'`. The `--constraints-json` is **required** and carries `model`,
+   `cloudrobo dispatch create-task --session-id <sid> --name <name> --task "<task>" --constraints-json '<json>'`. The `--constraints-json` is **required** and carries `model`,
    `robot_id`, and the **stop condition** `exec_constraints`. **Always set a stop condition**
    (`max_run_time` and `max_iter_num`) so the task cannot run unboundedly. Defaults if the user does
    not specify: `max_run_time=10` (minutes), `max_iter_num=100` (steps).
@@ -128,8 +130,7 @@ Scenario: "Tell robot A to go pick up the red cube and place it in the bin."
    This polls internally every **5s** and returns once the task status leaves `RUNNING`
    (i.e. reaches `COMPLETED`/`FAILED`/`CANCELLED` or any non-`RUNNING` state). Prefer `wait-task`
    over manual `show-task` polling — it replaces the old 20-30s manual polling loop.
-7. **Get result** — on completion, `cloudrobo dispatch show-task-result --session-id <sid> \
-   --task-id <task_id>` to read the natural-language result and log items.
+7. **Get result** — on completion, `cloudrobo dispatch show-task-result --session-id <sid> --task-id <task_id>` to read the natural-language result and log items.
 
 > **Note**: `robot_id` and `exec_model_id` are required inside `constraints`. Do not hardcode them;
 > resolve from robot and infer/asset outputs.
@@ -150,8 +151,7 @@ Scenario: "Tell robot A to go pick up the red cube and place it in the bin."
 
 Scenario: "What tasks are running in my session?"
 
-1. `cloudrobo dispatch list-tasks --session-id <sid> [--status <status>] [--robot-id <rid>] \
-   [--infer-service-id <iid>] [--start-time <ms>] [--end-time <ms>] [--content-match <text>]`
+1. `cloudrobo dispatch list-tasks --session-id <sid> [--status <status>] [--robot-id <rid>] [--infer-service-id <iid>] [--start-time <ms>] [--end-time <ms>] [--content-match <text>]`
    with pagination (`--limit`/`--offset`) and sorting (`--sort-key`/`--sort-dir`).
 2. `cloudrobo dispatch show-task --session-id <sid> --task-id <task_id>` for detail.
 3. Report task status, robot, model, and content.
@@ -213,16 +213,7 @@ cloudrobo dispatch <command> [OPTIONS]
 ### Create a Task
 
 ```bash
-cloudrobo dispatch create-task \
-  --session-id <session-id> \
-  --name <task-name> \
-  --task "<natural language task>" \
-  --constraints-json '{
-      "model": {"exec_model_id": "<model-id>"},
-      "robot_id": "<robot-id>",
-      "exec_constraints": {"max_run_time": 10, "max_iter_num": 100}
-  }' \
-  [--dry-run]
+cloudrobo dispatch create-task --session-id <session-id> --name <task-name> --task "<natural language task>" --constraints-json '{"model":{"exec_model_id":"<model-id>"},"robot_id":"<robot-id>","exec_constraints":{"max_run_time":10,"max_iter_num":100}}' [--dry-run]
 ```
 
 > **Stop condition is required in practice** (`constraints.exec_constraints`). If the user does not

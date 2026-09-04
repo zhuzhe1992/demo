@@ -318,24 +318,19 @@
 **Examples**:
 ```bash
 # model 类型 — 必填: model_type
-cloudrobo asset create-asset --catalog-id <id> --name my-model --type model \
-  --ext-metadata '{"model_type":"planning"}'
+cloudrobo asset create-asset --catalog-id <id> --name my-model --type model --ext-metadata '{"model_type":"planning"}'
 
 # dataset 类型 — 必填: annotation_status
-cloudrobo asset create-asset --catalog-id <id> --name my-dataset --type dataset \
-  --ext-metadata '{"annotation_status":true}'
+cloudrobo asset create-asset --catalog-id <id> --name my-dataset --type dataset --ext-metadata '{"annotation_status":true}'
 
 # simulation/robot 类型 — 必填: robot_type, robot_manufacturer
-cloudrobo asset create-asset --catalog-id <id> --name my-robot --type simulation --sub-type robot \
-  --ext-metadata '{"robot_type":"humanoid","robot_manufacturer":"Galaxea R1"}'
+cloudrobo asset create-asset --catalog-id <id> --name my-robot --type simulation --sub-type robot --ext-metadata '{"robot_type":"humanoid","robot_manufacturer":"Galaxea R1"}'
 
 # image 类型 — 必填: arch, device_type
-cloudrobo asset create-asset --catalog-id <id> --name my-image --type image \
-  --ext-metadata '{"arch":"x86_64","device_type":["GPU","CPU"]}'
+cloudrobo asset create-asset --catalog-id <id> --name my-image --type image --ext-metadata '{"arch":"x86_64","device_type":["GPU","CPU"]}'
 
 # algorithm 类型 — 必填: engine.image_url, engine.image_source, command
-cloudrobo asset create-asset --catalog-id <id> --name my-algo --type algorithm \
-  --ext-metadata '{"engine":{"image_url":"swr.cn-southwest-2.myhuaweicloud.com/namespace/repo:tag","image_source":"custom"},"command":"python train.py"}'
+cloudrobo asset create-asset --catalog-id <id> --name my-algo --type algorithm --ext-metadata '{"engine":{"image_url":"swr.cn-southwest-2.myhuaweicloud.com/namespace/repo:tag","image_source":"custom"},"command":"python train.py"}'
 ```
 
 ### 标签校验

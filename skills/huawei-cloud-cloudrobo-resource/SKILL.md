@@ -16,7 +16,10 @@ tags:
   - resource-pool
 ---
 
-# cloudrobo-resource
+> **Windows / PowerShell:** Examples use bash syntax. To run on Windows PowerShell:
+> - Flatten `\` line continuations to a single line, or end lines with a backtick.
+> - Set env vars with `$env:NAME="value"` instead of `export NAME="value"`.
+> - Single-quoted JSON `'{"a":"b"}'` works as-is.
 
 ## Overview 概述
 
@@ -95,15 +98,7 @@ cloudrobo resource <command> [OPTIONS]
 #### List quotas
 
 ```bash
-cloudrobo resource list-quotas \
-  [--workspace-id <id>] \
-  [--resource-id <id>] \
-  [--resource-type CCE|MODELARTS] \
-  [--resource-sub-type CPU|GPU|STANDARD|LITE] \
-  [--pool-type DEDICATED|SHARED] \
-  [--limit <n>] \
-  [--offset <n>] \
-  [--order ASC|DESC]
+cloudrobo resource list-quotas [--workspace-id <id>] [--resource-id <id>] [--resource-type CCE|MODELARTS] [--resource-sub-type CPU|GPU|STANDARD|LITE] [--pool-type DEDICATED|SHARED] [--limit <n>] [--offset <n>] [--order ASC|DESC]
 ```
 
 - **SDK:** `client.list_quotas(**params)`
@@ -119,14 +114,7 @@ nodes), `page_info`. CCE type quotas have `npu=0`; ModelArts type quotas have
 #### List resource pools
 
 ```bash
-cloudrobo resource list-pools \
-  [--resource-type CCE|MODELARTS] \
-  [--resource-sub-type CPU|GPU|STANDARD|LITE] \
-  [--pool-type DEDICATED|SHARED] \
-  [--usages TRAINING,INFERENCE] \
-  [--limit <n>] \
-  [--offset <n>] \
-  [--order ASC|DESC]
+cloudrobo resource list-pools [--resource-type CCE|MODELARTS] [--resource-sub-type CPU|GPU|STANDARD|LITE] [--pool-type DEDICATED|SHARED] [--usages TRAINING,INFERENCE] [--limit <n>] [--offset <n>] [--order ASC|DESC]
 ```
 
 - **SDK:** `client.list_pools(**params)`

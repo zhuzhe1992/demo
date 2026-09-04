@@ -119,11 +119,7 @@ cloudrobo robot list --workspace-id <workspace_id>
 # No need to create session; session_id = workspace_id
 
 # Create and execute task (create-task simultaneously creates AND executes)
-cloudrobo dispatch create-task \
-  --session-id <workspace_id> \
-  --name "<task_name>" \
-  --task "<task_description>" \
-  --constraints-json '{"model":{"exec_model_id":"<service_id>"},"robot_id":"<robot_id>","exec_constraints":{"max_iter_num":60,"max_run_time":5}}'
+cloudrobo dispatch create-task --session-id <workspace_id> --name "<task_name>" --task "<task_description>" --constraints-json '{"model":{"exec_model_id":"<service_id>"},"robot_id":"<robot_id>","exec_constraints":{"max_iter_num":60,"max_run_time":5}}'
 
 # Poll status (command is show-task, not get-task-status)
 cloudrobo dispatch show-task --session-id <workspace_id> --task-id <task_id>

@@ -15,6 +15,11 @@ tags:
 
 > Orchestrate the pipeline: asset query → model training → inference deployment → real-robot evaluation → result output. **Use CLI commands throughout; Python SDK is prohibited.**
 
+> **Windows / PowerShell:** Examples use bash syntax. To run on Windows PowerShell:
+> - Flatten `\` line continuations to a single line, or end lines with a backtick.
+> - Set env vars with `$env:NAME="value"` instead of `export NAME="value"`.
+> - Single-quoted JSON `'{"a":"b"}'` works as-is.
+
 ---
 
 ## Overview
@@ -391,11 +396,7 @@ cloudrobo dispatch list-tasks --session-id <workspace_id> --limit 1  # Verify
 > **Key**: `create-task` simultaneously creates **and executes** the task. No separate `execute-task` command.
 
 ```bash
-cloudrobo dispatch create-task \
-  --session-id <workspace_id> \
-  --name "<task_name>" \
-  --task "<task_description>" \
-  --constraints-json '{"model":{"exec_model_id":"<service_id>"},"robot_id":"<robot_id>","exec_constraints":{"max_iter_num":60,"max_run_time":5}}'
+cloudrobo dispatch create-task --session-id <workspace_id> --name "<task_name>" --task "<task_description>" --constraints-json '{"model":{"exec_model_id":"<service_id>"},"robot_id":"<robot_id>","exec_constraints":{"max_iter_num":60,"max_run_time":5}}'
 ```
 
 - `--session-id`: **Equals `workspace_id`**

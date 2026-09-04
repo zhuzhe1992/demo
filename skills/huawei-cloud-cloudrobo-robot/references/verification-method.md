@@ -29,21 +29,10 @@ cloudrobo workspace list-workspaces
 cloudrobo workspace use <workspace-id>
 
 # 2. Dry-run validate create (optional)
-cloudrobo robot create \
-  --name verify-robot \
-  --type HUMANOID \
-  --manufacturer DemoMaker \
-  --robot-model B2-W \
-  --workspace-id <ws-id> \
-  --dry-run
+cloudrobo robot create --name verify-robot --type HUMANOID --manufacturer DemoMaker --robot-model B2-W --workspace-id <ws-id> --dry-run
 
 # 3. Create robot (user must confirm)
-cloudrobo robot create \
-  --name verify-robot \
-  --type HUMANOID \
-  --manufacturer DemoMaker \
-  --robot-model B2-W \
-  --workspace-id <ws-id>
+cloudrobo robot create --name verify-robot --type HUMANOID --manufacturer DemoMaker --robot-model B2-W --workspace-id <ws-id>
 # → Returns robot_id
 
 # 4. Show robot detail
@@ -69,10 +58,7 @@ cloudrobo robot delete --robot-id <robot-id>
 ```bash
 # 1. Export the robot access config (接入配置) / certificate zip; --output is required (directory)
 mkdir -p ./certs
-cloudrobo robot export-certificate \
-  --robot-id <robot-id> \
-  --password "temp-export-pw" \
-  --output ./certs
+cloudrobo robot export-certificate --robot-id <robot-id> --password "temp-export-pw" --output ./certs
 
 # 2. Verify file written (auto-generated: cert_config_{robot_name}_{timestamp}.zip)
 ls -la ./certs/cert_config_*.zip

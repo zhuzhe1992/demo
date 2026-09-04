@@ -23,7 +23,10 @@ tags:
   - task-diagnosis
 ---
 
-# cloudrobo-dataset
+> **Windows / PowerShell:** Examples use bash syntax. To run on Windows PowerShell:
+> - Flatten `\` line continuations to a single line, or end lines with a backtick.
+> - Set env vars with `$env:NAME="value"` instead of `export NAME="value"`.
+> - Single-quoted JSON `'{"a":"b"}'` works as-is.
 
 ## Overview
 
@@ -143,14 +146,7 @@ cloudrobo dataset eval <command> [OPTIONS]
 #### Create a data processing task
 
 ```bash
-cloudrobo dataset proc create-task \
-  --name <task-name> \
-  --algo-type PRESET_ASSETS \
-  --task-config '<json-config>' \
-  [--workspace-id <id>] \
-  [--wait] \
-  [--timeout 1800] \
-  [--dry-run]
+cloudrobo dataset proc create-task --name <task-name> --algo-type PRESET_ASSETS --task-config '<json-config>' [--workspace-id <id>] [--wait] [--timeout 1800] [--dry-run]
 ```
 
 - **SDK:** `client.create_task(task_config: dict)`
@@ -167,18 +163,7 @@ Required task_config fields: `name`, `algo_type` (PRESET_ASSETS / WORKSPACE_ASSE
 #### List tasks
 
 ```bash
-cloudrobo dataset proc list-tasks \
-  [--status RUNNING|SUCCEEDED|FAILED] \
-  [--algo-type <type>] \
-  [--name <name>] \
-  [--order-by start_at|update_at|finish_at] \
-  [--order DESC|ASC] \
-  [--offset <n>] \
-  [--limit <n>] \
-  [--user-id <id>] \
-  [--algo-name <name>] \
-  [--output-name <name>] \
-  [--workspace-id <id>]
+cloudrobo dataset proc list-tasks [--status RUNNING|SUCCEEDED|FAILED] [--algo-type <type>] [--name <name>] [--order-by start_at|update_at|finish_at] [--order DESC|ASC] [--offset <n>] [--limit <n>] [--user-id <id>] [--algo-name <name>] [--output-name <name>] [--workspace-id <id>]
 ```
 
 - **SDK:** `client.list_tasks(workspace_id=None, statuses=..., algo_type=..., name=..., order_by=..., ...)`
@@ -217,10 +202,7 @@ cloudrobo dataset proc restart-task --task-id <task-id>
 #### Wait for task to reach terminal state
 
 ```bash
-cloudrobo dataset proc wait-task \
-  --task-id <task-id> \
-  [--timeout 1800] \
-  [--interval 10]
+cloudrobo dataset proc wait-task --task-id <task-id> [--timeout 1800] [--interval 10]
 ```
 
 Terminal states: `SUCCEEDED`, `FAILED`, `DELETED`
@@ -259,12 +241,7 @@ cloudrobo dataset proc download-log --task-id <id> --file-name <name> --file-pat
 #### Get task resource usage
 
 ```bash
-cloudrobo dataset proc get-resource-usage \
-  --task-id <task-id> \
-  --metric CPU_UTIL|CPU_USED_CORE|MEM_UTIL|MEM_USED_MB|NETWORK_TX_RATE|NETWORK_RX_RATE|DISK_READ_KB|DISK_WRITE_KB \
-  --start <unix-ts-sec> \
-  --end <unix-ts-sec> \
-  --step <10-3600>
+cloudrobo dataset proc get-resource-usage --task-id <task-id> --metric CPU_UTIL|CPU_USED_CORE|MEM_UTIL|MEM_USED_MB|NETWORK_TX_RATE|NETWORK_RX_RATE|DISK_READ_KB|DISK_WRITE_KB --start <unix-ts-sec> --end <unix-ts-sec> --step <10-3600>
 ```
 
 - **SDK:** `client.get_task_resource_usage(task_id, metric, start, end, step)`
@@ -302,12 +279,7 @@ operations. See the full comparison table in `references/task-config-catalog.md`
 #### Create an evaluation task
 
 ```bash
-cloudrobo dataset eval create-task \
-  --name <task-name> \
-  --task-config '<json-config>' \
-  [--workspace-id <id>] \
-  [--wait] \
-  [--timeout 1800]
+cloudrobo dataset eval create-task --name <task-name> --task-config '<json-config>' [--workspace-id <id>] [--wait] [--timeout 1800]
 ```
 
 - **SDK:** `client.create_eval_task(task_config: dict)`
@@ -395,11 +367,7 @@ Returns OBS temporary URL. Use `--is-download` for download link, omit for previ
 #### List available algorithms
 
 ```bash
-cloudrobo asset list-publication-assets \
-  --type algorithm \
-  --tags "Data Processing" \
-  [--name <fuzzy-name>] \
-  [--limit 20]
+cloudrobo asset list-publication-assets --type algorithm --tags "Data Processing" [--name <fuzzy-name>] [--limit 20]
 ```
 
 - **SDK (cross-package):** `asset_client.list_publication_assets(type="algorithm", sub_type="data_processing", limit=20)`

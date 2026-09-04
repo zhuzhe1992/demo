@@ -17,7 +17,10 @@ tags:
   - marketplace-search
 ---
 
-# cloudrobo-asset
+> **Windows / PowerShell:** Examples use bash syntax. To run on Windows PowerShell:
+> - Flatten `\` line continuations to a single line, or end lines with a backtick.
+> - Set env vars with `$env:NAME="value"` instead of `export NAME="value"`.
+> - Single-quoted JSON `'{"a":"b"}'` works as-is.
 
 ## Overview 概述
 
@@ -94,8 +97,7 @@ Import local files (models, datasets, etc.) into the CloudRobo asset repository.
    # With frontmatter (recommended — after export)
    cloudrobo asset import-asset --catalog-id <id> --local-path <path>
    # Without frontmatter
-   cloudrobo asset import-asset --catalog-id <id> --name <name> --type <type> --local-path <path> \
-     [--sub-type <sub-type>] [--ext-metadata '{"key":"value"}']
+   cloudrobo asset import-asset --catalog-id <id> --name <name> --type <type> --local-path <path> [--sub-type <sub-type>] [--ext-metadata '{"key":"value"}']
    ```
    - Auto-reads `local-path/README.md` frontmatter for metadata (name, type, sub_type, description,
      status, tags, version, ext_metadata, parent_asset_version_id, generation_method)
@@ -188,23 +190,15 @@ cloudrobo asset <command> [OPTIONS]
 
 #### Create asset
 ```bash
-cloudrobo asset create-asset \
-  --catalog-id <catalog-id> --type <type> [--name <name>] [--sub-type <sub-type>] \
-  [--description <desc>] [--status <status>] [--tags "tag1,tag2"] \
-  [--url <obs-or-swr-path>] [--ext-metadata '{"key":"value"}'] \
-  [--parent-asset-version-id <uuid>] [--generation-method <method>] [--dry-run]
+cloudrobo asset create-asset --catalog-id <catalog-id> --type <type> [--name <name>] [--sub-type <sub-type>] [--description <desc>] [--status <status>] [--tags "tag1,tag2"] [--url <obs-or-swr-path>] [--ext-metadata '{"key":"value"}'] [--parent-asset-version-id <uuid>] [--generation-method <method>] [--dry-run]
 ```
 - **SDK:** `client.create_asset(req: dict)`
 - **API:** `POST /v1/assets`
 
 #### List assets
 ```bash
-cloudrobo asset list-assets \
-  --repository-id <id> | --catalog-id <id> \
-  [--type <type>] [--sub-type <sub-type>] [--status <status>] \
-  [--name <name>] [--tags "tag1,tag2"] [--mine] \
-  [--offset <n>] [--limit <n>]
-# Full parameter list: see references/api-paths.md → List Assets
+cloudrobo asset list-assets [--repository-id <id>] [--catalog-id <id>] [--type <type>] [--sub-type <sub-type>] [--status <status>] [--name <name>] [--tags "tag1,tag2"] [--mine] [--offset <n>] [--limit <n>]
+# Either --repository-id OR --catalog-id filters the list. Full parameter list: see references/api-paths.md → List Assets
 ```
 - **SDK:** `client.list_assets(**params)`
 - **API:** `GET /v1/assets`
@@ -214,12 +208,7 @@ AND filter.
 
 #### Update asset
 ```bash
-cloudrobo asset update-asset \
-  --asset-id <asset-id> \
-  [--name <name>] [--description <desc>] \
-  [--status <status>] [--tags "tag1,tag2"] \
-  [--ext-metadata '{"key":"value"}'] \
-  [--dry-run]
+cloudrobo asset update-asset --asset-id <asset-id> [--name <name>] [--description <desc>] [--status <status>] [--tags "tag1,tag2"] [--ext-metadata '{"key":"value"}'] [--dry-run]
 ```
 - **SDK:** `client.update_asset(asset_id, req: dict)`
 - **API:** `PUT /v1/assets/{asset_id}`
@@ -237,32 +226,21 @@ SDK rejects them with `ValidationError`.
 
 #### Create version
 ```bash
-cloudrobo asset create-version \
-  --asset-id <asset-id> [--version <version>] [--description <desc>] \
-  [--status <status>] [--url <obs-or-swr-path>] [--ext-metadata '{"key":"value"}'] \
-  [--parent-asset-version-id <uuid>] [--generation-method <method>] [--dry-run]
+cloudrobo asset create-version --asset-id <asset-id> [--version <version>] [--description <desc>] [--status <status>] [--url <obs-or-swr-path>] [--ext-metadata '{"key":"value"}'] [--parent-asset-version-id <uuid>] [--generation-method <method>] [--dry-run]
 ```
 - **SDK:** `client.create_asset_version(asset_id, req: dict)`
 - **API:** `POST /v1/assets/{asset_id}/versions`
 
 #### List versions
 ```bash
-cloudrobo asset list-versions \
-  --asset-id <asset-id> [--version <version>] [--exact-version <version>] \
-  [--sort-key <field>] [--sort-dir <asc|desc>] [--offset <n>] [--limit <n>] \
-  [--actions "FFT,LORA"] [--actions-operator <and|or>] \
-  [--ext-metadata <key=value>] [--action-status "ENABLE,DISABLE"]
+cloudrobo asset list-versions --asset-id <asset-id> [--version <version>] [--exact-version <version>] [--sort-key <field>] [--sort-dir <asc|desc>] [--offset <n>] [--limit <n>] [--actions "FFT,LORA"] [--actions-operator <and|or>] [--ext-metadata <key=value>] [--action-status "ENABLE,DISABLE"]
 ```
 - **SDK:** `client.list_asset_versions(asset_id, **params)`
 - **API:** `GET /v1/assets/{asset_id}/versions`
 
 #### Update version
 ```bash
-cloudrobo asset update-version \
-  --asset-id <asset-id> --version-id <version-id> \
-  [--version <version>] [--description <desc>] \
-  [--status <status>] [--ext-metadata '{"key":"value"}'] \
-  [--dry-run]
+cloudrobo asset update-version --asset-id <asset-id> --version-id <version-id> [--version <version>] [--description <desc>] [--status <status>] [--ext-metadata '{"key":"value"}'] [--dry-run]
 ```
 - **SDK:** `client.update_asset_version(asset_id, version_id, req: dict)`
 - **API:** `PUT /v1/assets/{asset_id}/versions/{version_id}`
@@ -294,13 +272,11 @@ rejects them with `ValidationError`.
 
 **Create/Update action** (detailed):
 ```bash
-cloudrobo asset create-action --asset-id <id> --version-id <vid> \
-  --action-info '{"action":"FFT","algorithm":{"asset_id":"...","version_id":"..."},"status":"ENABLE"}' [--dry-run]
+cloudrobo asset create-action --asset-id <id> --version-id <vid> --action-info '{"action":"FFT","algorithm":{"asset_id":"...","version_id":"..."},"status":"ENABLE"}' [--dry-run]
 # SDK: client.create_asset_action(asset_id, version_id, req)
 # API: POST /v1/assets/{asset_id}/versions/{version_id}/actions
 
-cloudrobo asset update-action --asset-id <id> --version-id <vid> --action <name> \
-  --action-info '{"status":"DISABLE"}' [--dry-run]
+cloudrobo asset update-action --asset-id <id> --version-id <vid> --action <name> --action-info '{"status":"DISABLE"}' [--dry-run]
 # SDK: client.update_asset_action(asset_id, version_id, action, req)
 # API: PUT /v1/assets/{asset_id}/versions/{version_id}/actions/{action}
 ```
@@ -328,10 +304,7 @@ Full parameter list: see references/api-paths.md → List Publication Assets
 
 #### Import asset
 ```bash
-cloudrobo asset import-asset --local-path <local-folder> \
-  [--catalog-id <id>] [--name <name>] [--type <type>] [--sub-type <sub-type>] \
-  [--ext-metadata '{"key":"value"}'] [--asset-id <id>] [--version-id <vid>] \
-  [--overwrite] [--dry-run]
+cloudrobo asset import-asset --local-path <local-folder> [--catalog-id <id>] [--name <name>] [--type <type>] [--sub-type <sub-type>] [--ext-metadata '{"key":"value"}'] [--asset-id <id>] [--version-id <vid>] [--overwrite] [--dry-run]
 ```
 
 **Frontmatter support:**
@@ -351,8 +324,7 @@ cloudrobo asset import-asset --local-path <local-folder> \
 
 #### Export asset
 ```bash
-cloudrobo asset export-asset --asset-id <id> --local-path <local-folder> \
-  [--version-id <version-id>] [--dry-run]
+cloudrobo asset export-asset --asset-id <id> --local-path <local-folder> [--version-id <version-id>] [--dry-run]
 ```
 
 **README.md generation:**

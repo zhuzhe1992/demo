@@ -34,25 +34,25 @@ flowchart LR
 ```mermaid
 stateDiagram-v2
     [*] --> DRAFT: save-draft
-    [*] --> SUBMITTING: pretrain/finetune/create-task
-    DRAFT --> SUBMITTING: restart-task (edit & resubmit)
-    SUBMITTING --> PENDING: submit accepted
-    SUBMITTING --> SUBMIT_FAILED: submit error
-    PENDING --> RUNNING: resources scheduled
-    PENDING --> FAILED: schedule error
+    [*] --> CREATING: pretrain/finetune/create-task
+    DRAFT --> CREATING: restart-task (edit & resubmit)
+    CREATING --> WAITING: submit accepted
+    CREATING --> CREATE_FAILED: submit error
+    WAITING --> RUNNING: resources scheduled
+    WAITING --> FAILED: schedule error
     RUNNING --> FINISHED: task complete
     RUNNING --> RUN_FAILED: execution error
     RUNNING --> STOPPING: stop-task
     STOPPING --> STOPPED: stop success
     STOPPING --> STOP_FAILED: stop error
     FINISHED --> [*]: terminal success
-    SUBMIT_FAILED --> [*]: terminal failure
+    CREATE_FAILED --> [*]: terminal failure
     RUN_FAILED --> [*]: terminal failure
     STOPPED --> [*]: terminal stopped
     STOP_FAILED --> [*]: terminal failure
     FAILED --> [*]: terminal failure
     [*] --> DELETING: delete-tasks (batch POST for train / DELETE per-id for SimRL)
-    DELETING --> DELETED: delete success
+    DELETING --> [*]: delete success (task removed)
     DELETING --> DELETE_FAILED: delete error
     NOT_EXIST --> [*]: terminal
     ABNORMAL --> [*]: terminal
@@ -131,7 +131,7 @@ flowchart TD
     Later -->|Resubmit as-is| RestartCLI[restart-task --task-id<br/>CLI: resubmit existing config]
     Later -->|Resubmit with edits| RestartEdit[restart-task --task-id --config<br/>CLI: override fields via --config]
     Later -->|SDK full body| RestartSDK[restart_train_task task_id, req<br/>SDK: full TrainTaskDto body]
-    RestartCLI --> Submit[Task status = SUBMITTING]
+    RestartCLI --> Submit[Task status = CREATING]
     RestartSDK --> Submit
     Submit --> Poll[Poll to terminal]
 ```
@@ -140,12 +140,12 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    Fail[Task FAILED/RUN_FAILED/SUBMIT_FAILED] --> Detail[Get task detail<br/>show-task --task-id]
+    Fail[Task FAILED/RUN_FAILED/CREATE_FAILED] --> Detail[Get task detail<br/>show-task --task-id]
     Detail --> Stages[get-stages<br/>identify failed stage]
     Stages --> Events[get-events --start-time --end-time<br/>filter --level Error]
     Events --> Logs[get-logs --file-name<br/>detailed output]
     Logs --> Diagnose{Diagnose}
-    Diagnose -->|SUBMIT_FAILED| S1[Check spec format<br/>cluster_id, resource]
+    Diagnose -->|CREATE_FAILED| S1[Check spec format<br/>cluster_id, resource]
     Diagnose -->|Schedule failure| S2[Check spec, worker_num<br/>cluster capacity]
     Diagnose -->|Image pull| S3[Check algorithm.image_url]
     Diagnose -->|Dataset denied| S4[Check dataset_asset_id<br/>workspace permissions]

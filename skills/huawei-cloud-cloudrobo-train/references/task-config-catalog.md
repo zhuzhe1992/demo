@@ -46,14 +46,14 @@ for TRAIN_FROM_SCRATCH, top-level `inputs` and `outputs` arrays may be required.
     "asset_name": "<dataset-name>",
     "version_id": "<version-uuid>",
     "access_method": "env",
-    "local_code_dir": "<name>=/home/ma-user/cloudrobo/inputs/<name>_0"
+    "local_dir": "<name>=/home/ma-user/cloudrobo/inputs/<name>_0"
   },
   {
     "name": "<obs-input-name>",
     "url_path": "obs://bucket/obs-data/",
     "source_type": "OBS",
     "access_method": "parameter",
-    "local_code_dir": "--<name>=/home/ma-user/cloudrobo/inputs/<name>_0"
+    "local_dir": "--<name>=/home/ma-user/cloudrobo/inputs/<name>_0"
   },
   {
     "name": "<workspace-dataset-name>",
@@ -63,7 +63,7 @@ for TRAIN_FROM_SCRATCH, top-level `inputs` and `outputs` arrays may be required.
     "asset_name": "<dataset-name>",
     "version_id": "<version-uuid>",
     "access_method": "env",
-    "local_code_dir": "<name>=/home/ma-user/cloudrobo/inputs/<name>_0"
+    "local_dir": "<name>=/home/ma-user/cloudrobo/inputs/<name>_0"
   },
   {
     "name": "<workspace-model-name>",
@@ -74,22 +74,22 @@ for TRAIN_FROM_SCRATCH, top-level `inputs` and `outputs` arrays may be required.
     "version_id": "<version-uuid>",
     "version_name": "<version-name>",
     "access_method": "env",
-    "local_code_dir": "<name>=/home/ma-user/cloudrobo/inputs/<name>_0"
+    "local_dir": "<name>=/home/ma-user/cloudrobo/inputs/<name>_0"
   }
 ]
 ```
 
-| Field | Type | Description |
-| ----- | ---- | ----------- |
-| `name` | string | Input name |
-| `url_path` | string | OBS path for the input |
-| `source_type` | string enum | `PUBLIC_DATASET_ASSET` / `OBS` / `CUSTOM_DATASET_ASSET` / `CUSTOM_MODEL_ASSET` |
-| `asset_id` | string | Asset ID (for PUBLIC_DATASET_ASSET, CUSTOM_DATASET_ASSET, CUSTOM_MODEL_ASSET — NOT needed for OBS) |
-| `asset_name` | string | Asset name (same as above) |
-| `version_id` | string | Version ID (same as above; CUSTOM_MODEL_ASSET also has `version_name`) |
-| `version_name` | string | Version name (only for CUSTOM_MODEL_ASSET) |
+| Field           | Type | Description |
+|-----------------| ---- | ----------- |
+| `name`          | string | Input name |
+| `url_path`      | string | OBS path for the input |
+| `source_type`   | string enum | `PUBLIC_DATASET_ASSET` / `OBS` / `CUSTOM_DATASET_ASSET` / `CUSTOM_MODEL_ASSET` |
+| `asset_id`      | string | Asset ID (for PUBLIC_DATASET_ASSET, CUSTOM_DATASET_ASSET, CUSTOM_MODEL_ASSET — NOT needed for OBS) |
+| `asset_name`    | string | Asset name (same as above) |
+| `version_id`    | string | Version ID (same as above; CUSTOM_MODEL_ASSET also has `version_name`) |
+| `version_name`  | string | Version name (only for CUSTOM_MODEL_ASSET) |
 | `access_method` | string enum | `"env"` (环境变量) or `"parameter"` (超参) |
-| `local_code_dir` | string | Container mount path. env: `"<name>=<container-path>"`, parameter: `"--<name>=<container-path>"` |
+| `local_dir`     | string | Container mount path. env: `"<name>=<container-path>"`, parameter: `"--<name>=<container-path>"` |
 
 ### outputs structure
 
@@ -101,17 +101,17 @@ for TRAIN_FROM_SCRATCH, top-level `inputs` and `outputs` arrays may be required.
     "name": "<output-name>",
     "url_path": "obs://bucket/output-path/",
     "access_method": "parameter",
-    "local_code_dir": "--<name>=/home/ma-user/cloudrobo/outputs/<name>_0"
+    "local_dir": "--<name>=/home/ma-user/cloudrobo/outputs/<name>_0"
   }
 ]
 ```
 
-| Field | Type | Description |
-| ----- | ---- | ----------- |
-| `name` | string | Output name |
-| `url_path` | string | OBS path for the output |
+| Field           | Type | Description |
+|-----------------| ---- | ----------- |
+| `name`          | string | Output name |
+| `url_path`      | string | OBS path for the output |
 | `access_method` | string enum | `"env"` (环境变量) or `"parameter"` (超参) |
-| `local_code_dir` | string | Container mount path. env: `"<name>=<container-path>"`, parameter: `"--<name>=<container-path>"` |
+| `local_dir`     | string | Container mount path. env: `"<name>=<container-path>"`, parameter: `"--<name>=<container-path>"` |
 
 > `inputs`/`outputs` are NOT needed for Gallery model (`PUBLIC_MODEL_ASSET`) MODEL_TUNING scenarios
 > or Gallery algorithm (`PUBLIC_ALGORITHM_ASSET`) TRAIN_FROM_SCRATCH scenarios. They are required
@@ -315,15 +315,15 @@ For users bringing their own code/image — no preset algorithm. 5 fields, with
 | Status | Category | Description |
 | -------- | ---------- | ------------- |
 | `DRAFT` | Non-terminal (draft) | Draft saved, not executing |
-| `SUBMITTING` | Non-terminal (active) | Submitting to cluster |
-| `PENDING` | Non-terminal (active) | Waiting for resources |
+| `CREATING` | Non-terminal (active) | CREATING to cluster |
+| `WAITING` | Non-terminal (active) | Waiting for resources |
 | `RUNNING` | Non-terminal (active) | Training in progress |
 | `STOPPING` | Non-terminal (active) | Stop in progress |
 | `DELETING` | Non-terminal (active) | Deletion in progress |
 | `FINISHED` | Terminal (success) | Training completed |
 | `FAILED` | Terminal (failure) | Failed |
 | `RUN_FAILED` | Terminal (failure) | Run failed |
-| `SUBMIT_FAILED` | Terminal (failure) | Submit failed |
+| `CREATE_FAILED` | Terminal (failure) | Submit failed |
 | `STOPPED` | Terminal (stopped) | Stopped |
 | `STOP_FAILED` | Terminal (failure) | Stop failed |
 | `DELETED` | Terminal (deleted) | Deleted |
@@ -332,7 +332,7 @@ For users bringing their own code/image — no preset algorithm. 5 fields, with
 | `ABNORMAL` | Terminal (failure) | Abnormal |
 | `UNKNOWN` | Unknown | Unknown state |
 
-**Polling rule**: Continue polling while status is non-terminal (DRAFT, SUBMITTING, PENDING, RUNNING, STOPPING, DELETING, UNKNOWN). Stop on all others.
+**Polling rule**: Continue polling while status is non-terminal (DRAFT, CREATING, WAITING, RUNNING, STOPPING, DELETING, UNKNOWN). Stop on all others.
 
 ## Execution stages
 
@@ -375,7 +375,7 @@ Event fields: `time` (ISO 8601 +08:00), `level`, `message`, `source`.
    - **CLI**: `restart-task --task-id <id>` resubmits existing config; add `--config '<json>'` or `--config-file <path>` to override fields
    - **SDK**: `restart_train_task(task_id, req=None)` accepts partial overrides (merged with original task config)
    - SimRL: `restart-task --sim-rl --task-id <id>` → `restart_sim_rl_task(task_id, req=None, task_detail=None)`
-3. After resubmit: DRAFT → SUBMITTING → PENDING → RUNNING → terminal
+3. After resubmit: DRAFT → CREATING → WAITING → RUNNING → terminal
 
 ## Three-layer coverage matrix
 

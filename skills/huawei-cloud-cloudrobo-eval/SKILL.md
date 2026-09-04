@@ -5,6 +5,11 @@ description: 模型技能仿真评测任务管理。用于创建评测任务、�
 
 # CloudRobo Eval
 
+> **Windows / PowerShell:** Examples use bash syntax. To run on Windows PowerShell:
+> - Flatten `\` line continuations to a single line, or end lines with a backtick.
+> - Set env vars with `$env:NAME="value"` instead of `export NAME="value"`.
+> - Single-quoted JSON `'{"a":"b"}'` works as-is.
+
 ## Purpose
 
 使用此 Skill 管理模型技能仿真评测任务，支持创建评测任务、查询执行结果、批量删除任务、获取仿真环境VNC地址。
@@ -39,11 +44,7 @@ print(f"Evaluation started: {job['id']}")
 
 CLI:
 ```bash
-cloudrobo eval create-job \
-  --name skill-eval-1 \
-  --virtual-world-id d6e7f8a9-b0c1-2345-defa-456789012345 \
-  --infer-server-id f8a9b0c1-d2e3-4567-fabc-678901234567 \
-  --model-source CLOUDROBO_SQUARE
+cloudrobo eval create-job --name skill-eval-1 --virtual-world-id d6e7f8a9-b0c1-2345-defa-456789012345 --infer-server-id f8a9b0c1-d2e3-4567-fabc-678901234567 --model-source CLOUDROBO_SQUARE
 ```
 
 ## List Evaluation Jobs

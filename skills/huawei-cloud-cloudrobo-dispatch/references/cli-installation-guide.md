@@ -70,11 +70,7 @@ Use `--workspace-id` explicitly in create-task when a specific workspace is requ
 # Create a task targeting robot R1 with exec model M1.
 # `--constraints-json` is required and carries model / robot_id / exec_constraints (stop condition).
 # Defaults if the user gives none: max_run_time=10 (min), max_iter_num=100 (steps).
-cloudrobo dispatch create-task \
-  --session-id <sid> \
-  --name "pick-red-block" \
-  --task "Pick up the red block and place it in the tray" \
-  --constraints-json '{"model":{"exec_model_id":"<mid>"},"robot_id":"<rid>","exec_constraints":{"max_run_time":10,"max_iter_num":100}}'
+cloudrobo dispatch create-task --session-id <sid> --name "pick-red-block" --task "Pick up the red block and place it in the tray" --constraints-json '{"model":{"exec_model_id":"<mid>"},"robot_id":"<rid>","exec_constraints":{"max_run_time":10,"max_iter_num":100}}'
 
 # List RUNNING tasks in a session
 cloudrobo dispatch list-tasks --session-id <sid> --status RUNNING

@@ -26,7 +26,10 @@ tags:
   - sim-rl
 ---
 
-# cloudrobo-train
+> **Windows / PowerShell:** Examples use bash syntax. To run on Windows PowerShell:
+> - Flatten `\` line continuations to a single line, or end lines with a backtick.
+> - Set env vars with `$env:NAME="value"` instead of `export NAME="value"`.
+> - Single-quoted JSON `'{"a":"b"}'` works as-is.
 
 ## Overview
 
@@ -126,7 +129,7 @@ Ask exactly one question (use a single AskUserQuestion call, NEVER duplicate):
    - List output must show: model name + `latest_version_id` (user selects from this list)
    - **Critical**: When listing workspace models, **filter results for `status == "DRAFT"`** before
      presenting to user. Only `DRAFT` status models are ready for use. Models in `CREATING` status
-     will cause `SUBMIT_FAILED` with error `"输入模型未就绪"`. If no `DRAFT` models exist, warn the
+     will cause `CREATE_FAILED` with error `"输入模型未就绪"`. If no `DRAFT` models exist, warn the
      user and suggest using a Gallery model instead. Gallery models are typically all ready.
    - **Gallery model** (default path): Steps 2-5 below apply — algorithm comes from model's `actions` array
    - **Workspace model** (custom path): Skip Steps 2-5; algorithm config only needs `algorithm_asset_id`
@@ -214,7 +217,7 @@ Ask exactly one question (use a single AskUserQuestion call, NEVER duplicate):
     Default: silent submit (no output). With `--verbose/-v`, show a user-friendly summary first.
     **NEVER print raw JSON or code.** Then submit directly — no yes/no prompt.
 12. **Poll status** — 30s interval, report state changes until terminal state
-13. **On completion:** FINISHED → suggest export/deploy; FAILED/RUN_FAILED/SUBMIT_FAILED → offer logs/events for diagnosis
+13. **On completion:** FINISHED → suggest export/deploy; FAILED/RUN_FAILED/CREATE_FAILED → offer logs/events for diagnosis
 
 #### Step 3a-WS — Workspace model sub-flow (空间资产模型)
 
@@ -226,14 +229,14 @@ Steps 6-13 (ext_metadata, hyperparams, dataset, resource, output model, submit, 
 1. **Select workspace model** → extract `asset_id` + `latest_version_id` from the list entry.
    **Do NOT ask user for version again.**
    > **Critical**: Workspace model must have `status == "DRAFT"`. Models in `CREATING`
-   > status cannot be used as input and will cause `SUBMIT_FAILED` with error `"输入模型未就绪"`.
+   > status cannot be used as input and will cause `CREATE_FAILED` with error `"输入模型未就绪"`.
    > If no DRAFT models exist in the workspace, inform the user and suggest using a Gallery model instead.
 2. **Query model version detail** → get `ext_metadata` for algorithm config (engine, image, code_dir,
    command, etc.). The workspace model's algorithm info is embedded in the model itself, not in a
    separate algorithm asset's `actions` array.
 3. **Build algorithm config** — only 2 fields needed. The backend auto-resolves engine/command from
    the algorithm asset. Do NOT include `algorithm_source_type`, `engine`, `code_dir`, `command`,
-   `local_code_dir`, `image_asset_id`, or `image_version_id`:
+   `image_asset_id`, or `image_version_id`:
    ```json
    {
      "algorithm_asset_id": "<algo-asset-id>",
@@ -253,11 +256,11 @@ Steps 6-13 (ext_metadata, hyperparams, dataset, resource, output model, submit, 
      "url_path": "obs://bucket/path/",
      "source_type": "CUSTOM_MODEL_ASSET",
      "access_method": "env",
-     "local_code_dir": "<name>=/home/ma-user/cloudrobo/inputs/<name>_0"
+     "local_dir": "<name>=/home/ma-user/cloudrobo/inputs/<name>_0"
    }]
    ```
    - `access_method`: `"env"` (环境变量) or `"parameter"` (超参)
-   - `local_code_dir`: env mode → `"<name>=<container-path>"`, parameter mode → `"--<name>=<container-path>"`
+   - `local_dir`: env mode → `"<name>=<container-path>"`, parameter mode → `"--<name>=<container-path>"`
 
    **outputs** format (simpler — no source_type, always OBS path):
    ```json
@@ -265,7 +268,7 @@ Steps 6-13 (ext_metadata, hyperparams, dataset, resource, output model, submit, 
      "name": "<output-name>",
      "url_path": "obs://bucket/output-path/",
      "access_method": "parameter",
-     "local_code_dir": "--<name>=/home/ma-user/cloudrobo/outputs/<name>_0"
+     "local_dir": "--<name>=/home/ma-user/cloudrobo/outputs/<name>_0"
    }]
    ```
 
@@ -294,11 +297,11 @@ Ask which sub-path:
 
 **Algorithm config differences:**
 
-| Sub-path | Algorithm format | Discovery |
-|----------|-----------------|-----------|
-| Gallery (预制) | 2 fields: `algorithm_asset_id` + `algorithm_version_id`. Backend auto-resolves engine/image. | `list-publication-assets --type algorithm` → extract `algorithm_asset_id` + `latest_version_id`. Query `ext_metadata` for hyperparams/env/resource. |
-| Workspace (空间资产) | 8 fields: `engine.image_url` + `image_asset_id` + `image_version_id` + `code_dir` + `command` + `local_code_dir` + `algorithm_asset_id` + `algorithm_version_id`. | `list-assets --type algorithm` → extract `algorithm_asset_id` + `latest_version_id`. Query `ext_metadata` for engine/command/code_dir + hyperparams/env/resource. |
-| Custom (现配置) | 5 fields: `image_asset_id` + `image_version_id` + `command` + `local_code_dir` + `algorithm_source_type: "TEMP_CONFIGURE_ALGORITHM"`. No `algorithm_asset_id`. | User provides image asset, startup command, local code dir. No `ext_metadata` available. |
+| Sub-path | Algorithm format                                                                                                                               | Discovery |
+|----------|------------------------------------------------------------------------------------------------------------------------------------------------|-----------|
+| Gallery (预制) | 2 fields: `algorithm_asset_id` + `algorithm_version_id`. Backend auto-resolves engine/image.                                                   | `list-publication-assets --type algorithm` → extract `algorithm_asset_id` + `latest_version_id`. Query `ext_metadata` for hyperparams/env/resource. |
+| Workspace (空间资产) | 7 fields: `engine.image_url` + `image_asset_id` + `image_version_id` + `code_dir` + `command` + `algorithm_asset_id` + `algorithm_version_id`. | `list-assets --type algorithm` → extract `algorithm_asset_id` + `latest_version_id`. Query `ext_metadata` for engine/command/code_dir + hyperparams/env/resource. |
+| Custom (现配置) | 4 fields: `image_asset_id` + `image_version_id` + `command` + `algorithm_source_type: "TEMP_CONFIGURE_ALGORITHM"`. No `algorithm_asset_id`.    | User provides image asset, startup command, local code dir. No `ext_metadata` available. |
 
 **Notes:**
 - `algorithm_source_type` NOT needed for Gallery/Workspace (auto-inferred from `algorithm_asset_id`); only required for Custom (no asset_id).
@@ -410,7 +413,7 @@ Construct JSON with:
 1. **Create SimRL task** — `train create-task --config '<json>' --sim-rl` (or `save-draft --sim-rl`
    to save a draft first). SDK: `client.create_sim_rl_task(req)`.
 2. **Poll status** — `train show-task --task-id <id> --sim-rl` or `train list-tasks --sim-rl`
-3. **Monitor** — `get-stages --sim-rl`, `get-resource-usage --metric ... --start ... --end ... --sim-rl`,
+3. **Monitor** — `get-resource-usage --metric ... --start ... --end ... --sim-rl`,
    `get-events --start-time ... --end-time ... --sim-rl`, `get-logs --sim-rl`,
    `get-signed-url --file-source ... --file-name ... --sim-rl`
 4. **Lifecycle** — `stop-task --sim-rl`, `restart-task --sim-rl`, `clone-task`,
@@ -428,7 +431,7 @@ Scenario: user wants to save a task config without executing immediately, then e
 3. **Later, edit config and resubmit:**
    - **SDK (recommended for draft submit)**: `restart_train_task(task_id, req)` with full TrainTaskDto body — restart endpoint edits and resubmits
    - **CLI**: `train restart-task --task-id <draft-id>` resubmits with existing config; use SDK to pass edited config. For SimRL, `restart-task --sim-rl` resubmits
-4. **After resubmit**, task leaves DRAFT state → SUBMITTING → PENDING → RUNNING → terminal
+4. **After resubmit**, task leaves DRAFT state → CREATING → WAITING → RUNNING → terminal
 
 > **Inference note**: `save-draft` (POST /train-tasks/draft) returns task_id in DRAFT status; `restart` (POST /train-tasks/{id}/restart) accepts full TrainTaskDto body and edits/resubmits the task.
 
@@ -447,7 +450,7 @@ Scenario: task is RUNNING, track progress and resource usage.
 
 ### Diagnosis Workflow (Failure Diagnosis)
 
-Scenario: task FAILED / RUN_FAILED / SUBMIT_FAILED → auto-analyze, locate cause, suggest fixes.
+Scenario: task FAILED / RUN_FAILED / CREATE_FAILED → auto-analyze, locate cause, suggest fixes.
 
 1. **Get task detail** to confirm failure status, failure stage, and exit code
 2. **Get execution stages** to identify which stage failed (SCHEDULING/PREPARING/RUNNING/END)
@@ -458,7 +461,7 @@ Scenario: task FAILED / RUN_FAILED / SUBMIT_FAILED → auto-analyze, locate caus
    - SDK: `get_log_signed_url(task_id, file_source, file_name)` to get download URL
    - If all return empty/500: task may have failed before generating logs
 5. **Analyze key error patterns:**
-   - SUBMIT_FAILED → check `spec` format, `cluster_id`, resource availability, **input model status**
+   - CREATE_FAILED → check `spec` format, `cluster_id`, resource availability, **input model status**
    - **Input model not ready** → error: `"输入模型未就绪"` (input model not ready). Occurs when
      `input_models[].source_type` is `CUSTOM_MODEL_ASSET` but the model `status` is `CREATING` (not
      `DRAFT`). Fix: wait for model to reach `DRAFT` status, or use a Gallery model
@@ -533,13 +536,7 @@ cloudrobo train <command> [OPTIONS] [--sim-rl]
 #### Submit a fine-tuning task
 
 ```bash
-cloudrobo train finetune \
-  --name <task-name> \
-  --base-model-asset-id <model-id> \
-  --dataset-asset-id <dataset-id> \
-  --method FFT|SFT|LORA|QLORA|DEEPSPEED \
-  --spec 'Ascend: N * Model | vCPUs vCPUs | GiB GiB' \
-  [--dry-run]
+cloudrobo train finetune --name <task-name> --base-model-asset-id <model-id> --dataset-asset-id <dataset-id> --method FFT|SFT|LORA|QLORA|DEEPSPEED --spec 'Ascend: N * Model | vCPUs vCPUs | GiB GiB' [--dry-run]
 ```
 
 - **SDK:** `client.create_train_task(req)` — req format see [Step 3a](#step-3a--model_tuning-sub-flow)
@@ -548,12 +545,7 @@ cloudrobo train finetune \
 #### Submit a pretraining task (TRAIN_FROM_SCRATCH)
 
 ```bash
-cloudrobo train pretrain \
-  --name <task-name> \
-  --algorithm '<json-config>' \
-  --spec 'Ascend: N * Model | vCPUs vCPUs | GiB GiB' \
-  --dataset '<json-config>' \
-  [--dry-run]
+cloudrobo train pretrain --name <task-name> --algorithm '<json-config>' --spec 'Ascend: N * Model | vCPUs vCPUs | GiB GiB' --dataset '<json-config>' [--dry-run]
 ```
 
 - **SDK:** `client.create_train_task(req)` — req format see [Step 3b](#step-3b--train_from_scratch-sub-flow)
@@ -616,7 +608,7 @@ All accept `--sim-rl` (except `resume-task`, `clone-task` which is SimRL-only). 
 
 | Command | Required params | SDK Method | Returns |
 | ------- | --------------- | ---------- | ------- |
-| `get-stages --task-id <id>` | `--task-id` | `list_train_stages` / `list_sim_rl_task_stages` | 4 stages: SCHEDULING→PREPARING→RUNNING→END |
+| `get-stages --task-id <id>` | `--task-id` | `list_train_stages` | 4 stages: SCHEDULING→PREPARING→RUNNING→END |
 | `get-resource-usage --task-id <id> --metric <m> --start <s> --end <e>` | `--metric` `--start`(sec) `--end`(sec) | `show_resource_usage` / `show_sim_rl_task_resource_usage` | CPU/GPU/NPU utilization |
 | `get-logs --task-id <id> [--file-name] [--log-name-pre]` | `--task-id` | `get_log_content` / `show_sim_rl_task_observations_content` | Log content (`--file-name` not `--file-path`) |
 | `get-signed-url --task-id <id> --file-source <s> --file-name <n>` | `--file-source` `--file-name` | `get_log_signed_url` / `show_sim_rl_task_observations_signed_url` | OBS temp download URL |
@@ -638,17 +630,14 @@ cloudrobo train register-checkpoint --task-id <id> --checkpoint-name <name> [--s
 | `register-checkpoint` | `register_train_checkpoint(task_id, req)` | `POST /{task_id}/checkpoints/register` |
 
 `register-checkpoint`: `NEW_VERSION` (default) adds to existing model; `NEW_MODEL` creates new model
-(requires `--model-name`). Returns PENDING; processed asynchronously.
+(requires `--model-name`). Returns WAITING; processed asynchronously.
 
 ### Algorithm Discovery
 
 #### List available algorithms
 
 ```bash
-cloudrobo asset list-publication-assets \
-  --type algorithm \
-  [--name <fuzzy-name>] \
-  [--limit 20]
+cloudrobo asset list-publication-assets --type algorithm [--name <fuzzy-name>] [--limit 20]
 ```
 
 - **SDK (cross-package):** `asset_client.list_publication_assets(type="algorithm", limit=20)`
@@ -708,32 +697,32 @@ print "（无）" for empty env. For `restart-task --verbose`: show task_id + ch
 
 ## Edge Cases
 
-| Scenario | Handling |
-| ---------- | ---------- |
-| Missing `workspace_id` | All commands auto-resolve from config or auto-query; run `cloudrobo workspace use` to set default |
-| Task in non-terminal state | Poll at 30-60s intervals; training can run for hours/days |
-| `spec` format | String `Ascend: <n> * <model> \| <vCPUs> vCPUs \| <GiB> GiB`, not JSON. Filter by `ext_metadata.resource` constraints |
-| `train_method` / `train_mode` | Uppercase enums: `FFT`/`SFT`/`LORA`/`QLORA`/`DEEPSPEED`; `MODEL_TUNING`/`TRAIN_FROM_SCRATCH` |
-| SUBMIT_FAILED | Check `spec` format, `cluster_id`, resource availability, task name uniqueness (409 Conflict), **input model status** (must be `DRAFT` for workspace models) |
-| RUN_FAILED | Check logs/events; common: OOM, image pull failure, dataset access denied, **dataset format incompatibility** (exitCode 1 in <2 min, no logs) |
-| Resource scheduling failure | Check `spec`, `worker_num`, cluster capacity, and `ext_metadata.resource` min NPU constraint |
-| Stopped task | Use `restart-task` to resubmit; `resume-task` for supported train-only cases |
-| SimRL resume | Not supported; `--sim-rl` not accepted on `resume-task` |
-| Draft submit via CLI | `restart-task` supports `--config`/`--config-file` to edit fields before resubmit |
-| Missing required fields | SDK validates before HTTP call; CLI shows `click.UsageError` with the missing field list |
-| AK/SK not set | Operations fail at HTTP signing step; set `HUAWEI_CLOUD_AK`/`HUAWEI_CLOUD_SK` |
-| Array size limits | `datasets`, `input_models`, `output_models` — max 1 item each |
-| `parameters` format | JSON string; each item: `key`+`desc`+`value`+`constraint`; pass ALL hyperparams |
-| `env` format | JSON string; pass `"[]"` if no custom env vars |
+| Scenario | Handling                                                                                                                                                                                                                                                 |
+| ---------- |----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Missing `workspace_id` | All commands auto-resolve from config or auto-query; run `cloudrobo workspace use` to set default                                                                                                                                                        |
+| Task in non-terminal state | Poll at 30-60s intervals; training can run for hours/days                                                                                                                                                                                                |
+| `spec` format | String `Ascend: <n> * <model> \| <vCPUs> vCPUs \| <GiB> GiB`, not JSON. Filter by `ext_metadata.resource` constraints                                                                                                                                    |
+| `train_method` / `train_mode` | Uppercase enums: `FFT`/`SFT`/`LORA`/`QLORA`/`DEEPSPEED`; `MODEL_TUNING`/`TRAIN_FROM_SCRATCH`                                                                                                                                                             |
+| CREATE_FAILED | Check `spec` format, `cluster_id`, resource availability, task name uniqueness (409 Conflict), **input model status** (must be `DRAFT` for workspace models)                                                                                             |
+| RUN_FAILED | Check logs/events; common: OOM, image pull failure, dataset access denied, **dataset format incompatibility** (exitCode 1 in <2 min, no logs)                                                                                                            |
+| Resource scheduling failure | Check `spec`, `worker_num`, cluster capacity, and `ext_metadata.resource` min NPU constraint                                                                                                                                                             |
+| Stopped task | Use `restart-task` to resubmit; `resume-task` for supported train-only cases                                                                                                                                                                             |
+| SimRL resume | Not supported; `--sim-rl` not accepted on `resume-task`                                                                                                                                                                                                  |
+| Draft submit via CLI | `restart-task` supports `--config`/`--config-file` to edit fields before resubmit                                                                                                                                                                        |
+| Missing required fields | SDK validates before HTTP call; CLI shows `click.UsageError` with the missing field list                                                                                                                                                                 |
+| AK/SK not set | Operations fail at HTTP signing step; set `HUAWEI_CLOUD_AK`/`HUAWEI_CLOUD_SK`                                                                                                                                                                            |
+| Array size limits | `datasets`, `input_models`, `output_models` — max 1 item each                                                                                                                                                                                            |
+| `parameters` format | JSON string; each item: `key`+`desc`+`value`+`constraint`; pass ALL hyperparams                                                                                                                                                                          |
+| `env` format | JSON string; pass `"[]"` if no custom env vars                                                                                                                                                                                                           |
 | `cluster_id` | Pool ID with `pool-` prefix (e.g., `pool-6872b4ac-...`); SHARED or DEDICATED pool type. SHARED pools require the full `pool_id` (starts with `pool-`); DEDICATED pools use the cluster_id directly. Using DEDICATED pool requires asset read permissions |
-| Task status | 16 states; terminal: FINISHED/FAILED/RUN_FAILED/SUBMIT_FAILED/STOPPED/STOP_FAILED/DELETE_FAILED/NOT_EXIST/ABNORMAL |
-| Task deletion | Irreversible. CLI `delete-tasks --task-id <id>` auto-resolves `execution_id` from task_id for regular training tasks; no manual lookup needed |
-| Algorithm info | Dynamically fetched from `ext_metadata`; do not hardcode asset_ids |
-| Object storage | Must use `obs://` protocol; `s3://` prohibited |
-| Cross-skill | Does not call other skills; data processing → `cloudrobo-dataset`, deployment → `cloudrobo-infer` |
-| `--sim-rl` flag | On 14 commands; absent on `pretrain`/`finetune`/`resume-task`/`list-checkpoints`/`register-checkpoint` |
-| `get-logs` file selection | `--file-name` (not `--file-path`); `--log-name-pre` matches by prefix |
-| Clone task name conflict | SDK auto-generates `{original-name}-copy-{4hex}` name; pass `--config '{"name":"custom-name"}'` to override |
+| Task status | `status` 10 values: CREATING/RUNNING/FAILED/WAITING/DRAFT/FINISHED/STOPPING/DELETING/ABNORMAL; `detail_status` 15 values (adds CREATE_FAILED/RUN_FAILED/STOP_FAILED/NOT_EXIST/UNKNONW); terminal status: FINISHED/FAILED/STOPPED/ABNORMAL                |
+| Task deletion | Irreversible. CLI `delete-tasks --task-id <id>` auto-resolves `execution_id` from task_id for regular training tasks; no manual lookup needed                                                                                                            |
+| Algorithm info | Dynamically fetched from `ext_metadata`; do not hardcode asset_ids                                                                                                                                                                                       |
+| Object storage | Must use `obs://` protocol; `s3://` prohibited                                                                                                                                                                                                           |
+| Cross-skill | Does not call other skills; data processing → `cloudrobo-dataset`, deployment → `cloudrobo-infer`                                                                                                                                                        |
+| `--sim-rl` flag | On 14 commands; absent on `pretrain`/`finetune`/`resume-task`/`list-checkpoints`/`register-checkpoint`                                                                                                                                                   |
+| `get-logs` file selection | `--file-name` (not `--file-path`); `--log-name-pre` matches by prefix                                                                                                                                                                                    |
+| Clone task name conflict | SDK auto-generates `{original-name}-copy-{4hex}` name; pass `--config '{"name":"custom-name"}'` to override                                                                                                                                              |
 
 ## Verification & Best Practices
 
@@ -741,7 +730,7 @@ print "（无）" for empty env. For `restart-task --verbose`: show task_id + ch
 - **Polling**: 30-60s intervals; report status + stage changes. On FINISHED → suggest export/deploy; on FAILED → offer logs/events
 - **Draft workflow**: save-draft → verify DRAFT → restart-task → verify leaves DRAFT → poll to terminal
 - **Monitoring**: `get-stages` (4-stage flow), `get-resource-usage` (CPU/GPU/NPU), `get-events` (filter `--level Error`)
-- **SimRL**: repeat monitoring with `--sim-rl`; verify `resume-task` rejects `--sim-rl`
+- **SimRL**: repeat monitoring with `--sim-rl` (except `get-stages`); verify `resume-task` rejects `--sim-rl`
 - **Dry-run**: use `--dry-run` on pretrain/finetune to validate params before submission
 - **Drafts**: use SDK `restart_train_task(task_id, req)` to submit with edited config (CLI doesn't accept config body)
 - **Stats**: `stats --workspace-id <id>` for status distribution overview

@@ -44,11 +44,7 @@ Start the R2C client with the dummy adapter for a timed test:
 
 ```bash
 # Start client with dummy adapter, run for 10 seconds
-cloudrobo r2c client \
-  --bundle <path/to/credential_bundle.zip> \
-  --robot-config config/robot_dummy_config.yaml \
-  --duration 10 \
-  --log-level INFO
+cloudrobo r2c client --bundle <path/to/credential_bundle.zip> --robot-config config/robot_dummy_config.yaml --duration 10 --log-level INFO
 ```
 
 **Pass criteria**: Log output shows:
@@ -66,11 +62,7 @@ Test the R2C client in dry_run mode (observations published, actions logged but 
 # Edit config/robot_dummy_config.yaml: runtime.dry_run: true
 
 # 2. Start client
-cloudrobo r2c client \
-  --bundle <path/to/credential_bundle.zip> \
-  --robot-config config/robot_dummy_config.yaml \
-  --duration 30 \
-  --log-level DEBUG
+cloudrobo r2c client --bundle <path/to/credential_bundle.zip> --robot-config config/robot_dummy_config.yaml --duration 30 --log-level DEBUG
 
 # 3. Verify observations are published (check logs)
 # 4. If cloud adapter is running, verify actions are received but logged only
@@ -94,11 +86,7 @@ runs in dry-run mode, then confirm the client logs received actions without exec
 
 ```bash
 # Record observations for 10 seconds
-cloudrobo r2c client \
-  --bundle <path/to/credential_bundle.zip> \
-  --robot-config config/robot_dummy_config.yaml \
-  --duration 10 \
-  --record ./test_observations.pkl
+cloudrobo r2c client --bundle <path/to/credential_bundle.zip> --robot-config config/robot_dummy_config.yaml --duration 10 --record ./test_observations.pkl
 
 # Verify recording file
 ls -la ./test_observations.pkl
@@ -123,6 +111,8 @@ export R2C_KEY_PASSWORD="test-password"
 cloudrobo r2c client --bundle <encrypted_bundle.zip> --robot-config config/robot_dummy_config.yaml --duration 1 --private-key-password-env R2C_KEY_PASSWORD
 # Expected: connects without prompting
 ```
+
+> **PowerShell:** replace `export R2C_KEY_PASSWORD="test-password"` above with `$env:R2C_KEY_PASSWORD="test-password"`.
 
 **Pass criteria**: Password handling matches configuration.
 

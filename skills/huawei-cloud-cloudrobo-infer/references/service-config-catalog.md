@@ -182,15 +182,7 @@ SDK (9 methods) / CLI (9 commands) coverage:
 ### Create an Inference Service
 
 ```bash
-cloudrobo infer create \
-  --name <service-name> \
-  --flavor "<flavor>" \
-  --model-json '{"model_id": "<model-id>", "model_version_id": "<model-version-id>"}' \
-  --workspace-id <workspace-id> \
-  --pool-id pool-<resource-id> \
-  --pool-type <pool-type> \
-  [--description "desc"] [--envs-json '[...]'] \
-  [--stop-schedule-json '{"duration": 60, "time_unit": "MINUTES"}'] [--dry-run]
+cloudrobo infer create --name <service-name> --flavor "<flavor>" --model-json '{"model_id": "<model-id>", "model_version_id": "<model-version-id>"}' --workspace-id <workspace-id> --pool-id pool-<resource-id> --pool-type <pool-type> [--description "desc"] [--envs-json '[...]'] [--stop-schedule-json '{"duration": 60, "time_unit": "MINUTES"}'] [--dry-run]
 ```
 
 ```python
@@ -217,9 +209,7 @@ print(service)  # includes service_id
 ### Wait-Deploy (CLI convenience)
 
 ```bash
-cloudrobo infer wait-deploy \
-  --service-id <service-id> \
-  [--timeout 600]
+cloudrobo infer wait-deploy --service-id <service-id> [--timeout 600]
 ```
 
 ```python
@@ -300,11 +290,7 @@ client.delete_infer_service("<service-id>")
 ### List Service Logs
 
 ```bash
-cloudrobo infer list-logs \
-  --service-id <service-id> \
-  --start-time <milliseconds> \
-  --end-time <milliseconds> \
-  [--limit 100] [--keywords "error"] [--is-desc] [--line-num <num>] [--is-count] [--highlight] [--dry-run]
+cloudrobo infer list-logs --service-id <service-id> --start-time <milliseconds> --end-time <milliseconds> [--limit 100] [--keywords "error"] [--is-desc] [--line-num <num>] [--is-count] [--highlight] [--dry-run]
 ```
 
 ```python

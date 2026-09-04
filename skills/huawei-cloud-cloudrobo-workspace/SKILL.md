@@ -21,7 +21,10 @@ tags:
   - default-workspace
 ---
 
-# cloudrobo-workspace
+> **Windows / PowerShell:** Examples use bash syntax. To run on Windows PowerShell:
+> - Flatten `\` line continuations to a single line, or end lines with a backtick.
+> - Set env vars with `$env:NAME="value"` instead of `export NAME="value"`.
+> - Single-quoted JSON `'{"a":"b"}'` works as-is.
 
 ## Overview 概述
 
@@ -125,13 +128,7 @@ cloudrobo workspace <command> [OPTIONS]
 #### Create a workspace
 
 ```bash
-cloudrobo workspace create \
-  --name <workspace-name> \
-  --default-obs-path <obs://bucket/path> \
-  [--description <description>] \
-  [--tags <tag1,tag2>] \
-  [--member-list '<json>'] \
-  [--dry-run]
+cloudrobo workspace create --name <workspace-name> --default-obs-path <obs://bucket/path> [--description <description>] [--tags <tag1,tag2>] [--member-list '<json>'] [--dry-run]
 ```
 
 - **SDK:** `client.create_workspace(req: dict)`
@@ -149,9 +146,7 @@ administrator (if non-root user) → create default quota → add members (if pr
 #### List workspaces
 
 ```bash
-cloudrobo workspace list \
-  [--limit <n>] \
-  [--offset <n>]
+cloudrobo workspace list [--limit <n>] [--offset <n>]
 ```
 
 - **SDK:** `client.list_workspaces(limit=..., offset=...)`
@@ -177,14 +172,7 @@ Returns: full workspace detail including `workspace_id`, `name`, `description`,
 #### Update a workspace
 
 ```bash
-cloudrobo workspace update \
-  --workspace-id <workspace-id> \
-  [--name <new-name>] \
-  [--description <new-description>] \
-  [--tags <tag1,tag2>] \
-  [--owner-id <user-id>] \
-  [--default-obs-path <obs://...>] \
-  [--dry-run]
+cloudrobo workspace update --workspace-id <workspace-id> [--name <new-name>] [--description <new-description>] [--tags <tag1,tag2>] [--owner-id <user-id>] [--default-obs-path <obs://...>] [--dry-run]
 ```
 
 - **SDK:** `client.update_workspace(workspace_id: str, req: dict)`
@@ -197,9 +185,7 @@ ownership), `default_obs_path`. The default workspace can only set `default_obs_
 #### Delete a workspace
 
 ```bash
-cloudrobo workspace delete \
-  --workspace-id <workspace-id> \
-  [--dry-run]
+cloudrobo workspace delete --workspace-id <workspace-id> [--dry-run]
 ```
 
 - **SDK:** `client.delete_workspace(workspace_id: str)`
@@ -226,9 +212,7 @@ listed as super_administrator.
 #### Add workspace members
 
 ```bash
-cloudrobo workspace add-members \
-  --workspace-id <workspace-id> \
-  --member-list '<json>'
+cloudrobo workspace add-members --workspace-id <workspace-id> --member-list '<json>'
 ```
 
 - **SDK:** `client.add_workspace_members(workspace_id: str, req: dict)`
@@ -241,10 +225,7 @@ members are rejected. The default workspace does not support member operations.
 #### Update a member's roles
 
 ```bash
-cloudrobo workspace update-member \
-  --workspace-id <workspace-id> \
-  --user-id <user-id> \
-  --role-ids <role-id-1,role-id-2>
+cloudrobo workspace update-member --workspace-id <workspace-id> --user-id <user-id> --role-ids <role-id-1,role-id-2>
 ```
 
 - **SDK:** `client.update_workspace_member(workspace_id: str, req: dict)`
@@ -256,9 +237,7 @@ default workspace does not support member operations.
 #### Delete workspace members
 
 ```bash
-cloudrobo workspace delete-members \
-  --workspace-id <workspace-id> \
-  --user-ids <user-id-1,user-id-2>
+cloudrobo workspace delete-members --workspace-id <workspace-id> --user-ids <user-id-1,user-id-2>
 ```
 
 - **SDK:** `client.delete_workspace_members(workspace_id: str, user_ids: list)`

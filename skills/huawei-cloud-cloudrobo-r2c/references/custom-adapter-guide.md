@@ -282,9 +282,7 @@ cloudrobo r2c list-adapters
 cloudrobo r2c validate-config --robot-config robot_my_robot_config.yaml
 
 # Start the client
-cloudrobo r2c client \
-  --bundle <credential_bundle.zip> \
-  --robot-config robot_my_robot_config.yaml
+cloudrobo r2c client --bundle <credential_bundle.zip> --robot-config robot_my_robot_config.yaml
 ```
 
 ### Entry-Point Discovery Mechanism
@@ -373,10 +371,7 @@ hardware:
 Or pass the class directly on the CLI:
 
 ```bash
-cloudrobo r2c client \
-  --bundle <credential_bundle.zip> \
-  --robot-config config/my_robot_config.yaml \
-  --hardware-class my_pkg.my_adapter.MyRobotAdapter
+cloudrobo r2c client --bundle <credential_bundle.zip> --robot-config config/my_robot_config.yaml --hardware-class my_pkg.my_adapter.MyRobotAdapter
 ```
 
 ## Path 3: VendorSDKHardwareAdapter (No Code) 厂商SDK适配器（无需编码）
@@ -638,11 +633,7 @@ class MyTranslator(IDeviceTranslator):
 Use with `--translator-class`:
 
 ```bash
-cloudrobo r2c client \
-  --bundle <credential_bundle.zip> \
-  --robot-config config/my_robot_config.yaml \
-  --hardware-class my_pkg.my_adapter.MyRobotAdapter \
-  --translator-class my_pkg.my_translator.MyTranslator
+cloudrobo r2c client --bundle <credential_bundle.zip> --robot-config config/my_robot_config.yaml --hardware-class my_pkg.my_adapter.MyRobotAdapter --translator-class my_pkg.my_translator.MyTranslator
 ```
 
 ## Dry-Run Testing
@@ -661,11 +652,7 @@ cloudrobo r2c validate-config --robot-config config/my_robot_config.yaml
 Set `runtime.dry_run: true` in the robot config, then start the client:
 
 ```bash
-cloudrobo r2c client \
-  --bundle <credential_bundle.zip> \
-  --robot-config config/my_robot_config.yaml \
-  --log-level DEBUG \
-  --duration 60
+cloudrobo r2c client --bundle <credential_bundle.zip> --robot-config config/my_robot_config.yaml --log-level DEBUG --duration 60
 ```
 
 Verify:

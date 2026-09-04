@@ -21,6 +21,12 @@ export HUAWEI_CLOUD_AK="your-access-key"
 export HUAWEI_CLOUD_SK="your-secret-key"
 ```
 
+```powershell
+# PowerShell
+$env:HUAWEI_CLOUD_AK="your-access-key"
+$env:HUAWEI_CLOUD_SK="your-secret-key"
+```
+
 The `ApigSdkSigner` (in `cloudrobo_core.sdk.apig_sdk_auth`) signs each HTTP request:
 
 - Canonical request construction (method / URI / headers / body hash)

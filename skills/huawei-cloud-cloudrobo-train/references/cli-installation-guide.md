@@ -48,6 +48,12 @@ export HUAWEI_CLOUD_AK="your-access-key"
 export HUAWEI_CLOUD_SK="your-secret-key"
 ```
 
+```powershell
+# PowerShell
+$env:HUAWEI_CLOUD_AK="your-access-key"
+$env:HUAWEI_CLOUD_SK="your-secret-key"
+```
+
 ### Initialize user config (optional)
 
 ```bash
@@ -126,7 +132,7 @@ export CLOUDROBO_ENDPOINT_CLOUDROBO-SERVICE="https://cloudrobo.cn-north-4.myhuaw
 | `403 Forbidden` | Check workspace_id is correct; ensure account has CloudRobo access |
 | `400 spec format invalid` | `spec` must match `Ascend: N * Model \| vCPUs vCPUs \| GiB GiB` |
 | `400 train_method invalid` | Use uppercase enum: SFT/LORA/QLORA/DEEPSPEED |
-| `SUBMIT_FAILED` | Check spec, cluster_id, resource availability |
+| `CREATE_FAILED` | Check spec, cluster_id, resource availability |
 | `Connection error` | Check region/endpoint config; verify network/proxy settings |
 | `get-resource-usage` missing params | `--metric`, `--start`, `--end` are all required |
 | `get-events` missing params | `--start-time`, `--end-time` are both required |

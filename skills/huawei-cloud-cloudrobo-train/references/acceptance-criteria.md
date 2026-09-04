@@ -63,7 +63,7 @@
 | # | Criterion | Verification |
 | --- | ----------- | ------------- |
 | AC-33 | Can save draft with minimal config (name+workspace_id) | task_id returned, status DRAFT |
-| AC-34 | Can resubmit draft via `restart-task` | Task leaves DRAFT, enters SUBMITTING |
+| AC-34 | Can resubmit draft via `restart-task` | Task leaves DRAFT, enters CREATING |
 | AC-35 | Can resubmit draft with edited config (SDK) | Task uses edited config |
 
 ### SimRL (Simulation Reinforcement Learning)
@@ -89,7 +89,7 @@
 | --- | ----------- | ------------- |
 | AC-48 | Status enum has 16 states | All states documented and observed |
 | AC-49 | Terminal states correctly identified | FINISHED/FAILED/RUN_FAILED/etc. stop polling |
-| AC-50 | Non-terminal states continue polling | DRAFT/SUBMITTING/PENDING/RUNNING/etc. |
+| AC-50 | Non-terminal states continue polling | DRAFT/CREATING/WAITING/RUNNING/etc. |
 
 ## Non-Functional Criteria
 

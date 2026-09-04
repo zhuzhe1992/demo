@@ -40,21 +40,10 @@ cloudrobo asset list-assets --catalog-id <workspace-catalog-id> --type dataset
 # → Extract dataset_asset_id, version_id, url_path
 
 # 3. Dry-run validate (optional)
-cloudrobo train finetune \
-  --name verify-finetune \
-  --base-model-asset-id <model-id> \
-  --dataset-asset-id <dataset-id> \
-  --method LORA \
-  --spec '{"Ascend":"1 * Ascend-910B | 24 vCPUs | 96 GiB"}' \
-  --dry-run
+cloudrobo train finetune --name verify-finetune --base-model-asset-id <model-id> --dataset-asset-id <dataset-id> --method LORA --spec '{"Ascend":"1 * Ascend-910B | 24 vCPUs | 96 GiB"}' --dry-run
 
 # 4. Create task (user must confirm)
-cloudrobo train finetune \
-  --name verify-finetune \
-  --base-model-asset-id <model-id> \
-  --dataset-asset-id <dataset-id> \
-  --method LORA \
-  --spec '{"Ascend":"1 * Ascend-910B | 24 vCPUs | 96 GiB"}'
+cloudrobo train finetune --name verify-finetune --base-model-asset-id <model-id> --dataset-asset-id <dataset-id> --method LORA --spec '{"Ascend":"1 * Ascend-910B | 24 vCPUs | 96 GiB"}'
 # → Returns task_id
 
 # 5. Poll status (30-60s interval)
@@ -66,18 +55,11 @@ cloudrobo train get-stages --task-id <task-id>
 # → Returns SCHEDULING → PREPARING → RUNNING → END
 
 # 7. Verify resource usage (requires metric/start/end, timestamps in seconds)
-cloudrobo train get-resource-usage \
-  --task-id <task-id> \
-  --metric cpu_util \
-  --start <start-timestamp-seconds> \
-  --end <end-timestamp-seconds>
+cloudrobo train get-resource-usage --task-id <task-id> --metric cpu_util --start <start-timestamp-seconds> --end <end-timestamp-seconds>
 # → Returns CPU/GPU/NPU utilization
 
 # 8. Verify events (requires start-time/end-time, timestamps in milliseconds)
-cloudrobo train get-events \
-  --task-id <task-id> \
-  --start-time <start-timestamp-milliseconds> \
-  --end-time <end-timestamp-milliseconds>
+cloudrobo train get-events --task-id <task-id> --start-time <start-timestamp-milliseconds> --end-time <end-timestamp-milliseconds>
 # → Returns event list
 
 # 9. View logs
@@ -85,10 +67,7 @@ cloudrobo train get-logs --task-id <task-id> --file-name <log-file>
 # → Returns log content
 
 # 10. Get signed URL (requires file-source/file-name)
-cloudrobo train get-signed-url \
-  --task-id <task-id> \
-  --file-source TRAIN \
-  --file-name <log-file>
+cloudrobo train get-signed-url --task-id <task-id> --file-source TRAIN --file-name <log-file>
 # → Returns OBS temp download URL
 
 # 11. Clean up (user must confirm)
@@ -112,7 +91,7 @@ cloudrobo train show-task --task-id <draft-id>
 
 # 3. Resubmit via restart (CLI resubmits existing config by default)
 cloudrobo train restart-task --task-id <draft-id>
-# → Task leaves DRAFT, enters SUBMITTING
+# → Task leaves DRAFT, enters CREATING
 
 # 4. To edit config before resubmit, use CLI --config:
 #    cloudrobo train restart-task --task-id <draft-id> --config '{"spec":"Ascend: 2 * SNT9B2"}'
@@ -135,11 +114,7 @@ cloudrobo train get-stages --task-id <failed-task-id>
 # → Identify which stage: SCHEDULING/PREPARING/RUNNING/END
 
 # 3. Get Error events (requires start-time/end-time in milliseconds)
-cloudrobo train get-events \
-  --task-id <failed-task-id> \
-  --start-time <start-timestamp-milliseconds> \
-  --end-time <end-timestamp-milliseconds> \
-  --level Error
+cloudrobo train get-events --task-id <failed-task-id> --start-time <start-timestamp-milliseconds> --end-time <end-timestamp-milliseconds> --level Error
 # → Filter for level=Error
 
 # 4. Get logs
@@ -196,7 +171,7 @@ cloudrobo train resume-task --task-id <task-id> --sim-rl
 | TC-02: Query models | `list-assets --type model` | JSON array with asset_id |
 | TC-03: Query datasets | `list-assets --type dataset` | JSON array with dataset_asset_id |
 | TC-04: Dry-run finetune | valid params + `--dry-run` | `[DRY-RUN]` message, no task created |
-| TC-05: Create finetune | valid finetune params | task_id returned, status SUBMITTING/PENDING |
+| TC-05: Create finetune | valid finetune params | task_id returned, status CREATING/WAITING |
 | TC-06: Poll status | task_id | status transitions to terminal (FINISHED/FAILED) |
 | TC-07: Get stages | task_id | 4-stage flow with sub_stages |
 | TC-08: Get resource usage | task_id + metric + start + end | CPU/GPU/NPU utilization data |
@@ -223,8 +198,8 @@ cloudrobo train resume-task --task-id <task-id> --sim-rl
 | 400 missing metric/start/end | get-resource-usage requires all three | Pass `--metric`, `--start`, `--end` |
 | 400 missing start-time/end-time | get-events requires both | Pass `--start-time`, `--end-time` |
 | 400 missing file-source/file-name | get-signed-url requires both | Pass `--file-source`, `--file-name` |
-| SUBMIT_FAILED | spec/cluster_id/resource issue | Check spec format, cluster capacity |
+| CREATE_FAILED | spec/cluster_id/resource issue | Check spec format, cluster capacity |
 | RUN_FAILED | algorithm/dataset/OOM | Check image_url, dataset access, spec memory |
-| Task stuck in PENDING | Resource pool full | Check cluster capacity, reduce worker_num |
+| Task stuck in WAITING | Resource pool full | Check cluster capacity, reduce worker_num |
 | Stages incomplete | Task failed before END | Check which stage failed via get-stages |
 | `resume-task --sim-rl` error | resume is train-only | Remove `--sim-rl` or use `restart-task --sim-rl` |

@@ -82,13 +82,7 @@ Use the question tool to ask the user for:
 ### Step C.2: Register Robot
 
 ```bash
-cloudrobo robot create \
-  --name <robot_name> \
-  --type <TYPE> \
-  --manufacturer <manufacturer> \
-  --robot-model <robot_model> \
-  --workspace-id <workspace_id> \
-  [--description "<description>"]
+cloudrobo robot create --name <robot_name> --type <TYPE> --manufacturer <manufacturer> --robot-model <robot_model> --workspace-id <workspace_id> [--description "<description>"]
 ```
 
 > **Confirm before executing** — this is a mutating operation. Extract `id` → `robot_id` from the response.

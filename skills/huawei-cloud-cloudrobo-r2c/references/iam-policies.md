@@ -24,6 +24,12 @@ export HUAWEI_CLOUD_AK="your-access-key"
 export HUAWEI_CLOUD_SK="your-secret-key"
 ```
 
+```powershell
+# PowerShell
+$env:HUAWEI_CLOUD_AK="your-access-key"
+$env:HUAWEI_CLOUD_SK="your-secret-key"
+```
+
 ### Data Plane (R2C SDK)
 
 The R2C SDK uses the credential bundle (produced by `robot export-certificate`) for mTLS

@@ -49,6 +49,12 @@ export HUAWEI_CLOUD_AK="<your-ak>"
 export HUAWEI_CLOUD_SK="<your-sk>"
 ```
 
+```powershell
+# PowerShell
+$env:HUAWEI_CLOUD_AK="<your-ak>"
+$env:HUAWEI_CLOUD_SK="<your-sk>"
+```
+
 Or edit `~/.cloudrobo/config.yaml`:
 
 ```yaml
@@ -65,6 +71,11 @@ Import/export operations require the `cloudrobo-obs` endpoint. Verify configurat
 
 ```bash
 cloudrobo config show | grep obs
+```
+
+```powershell
+# PowerShell
+cloudrobo config show | Select-String obs
 ```
 
 If not configured or DNS is unreachable, confirm the correct OBS endpoint with the user. Do not

@@ -20,7 +20,10 @@ tags:
   - robot-onboarding
 ---
 
-# cloudrobo-robot
+> **Windows / PowerShell:** Examples use bash syntax. To run on Windows PowerShell:
+> - Flatten `\` line continuations to a single line, or end lines with a backtick.
+> - Set env vars with `$env:NAME="value"` instead of `export NAME="value"`.
+> - Single-quoted JSON `'{"a":"b"}'` works as-is.
 
 ## Overview
 
@@ -86,8 +89,7 @@ Scenario: the user wants to register and onboard a new robot.
 2. **Resolve workspace** — Confirm workspace via `cloudrobo workspace current` or ask user for
    `workspace_id`. Robot create/list require a workspace context (workspace is a foundational
    resource container).
-3. **Register robot** — `cloudrobo robot create --name <name> --type <TYPE> --manufacturer <mfg> \
-   --robot-model <model> --workspace-id <ws>`. Confirm the config before
+3. **Register robot** — `cloudrobo robot create --name <name> --type <TYPE> --manufacturer <mfg> --robot-model <model> --workspace-id <ws>`. Confirm the config before
    submitting. Output the returned `robot_id`.
 4. **Verify** — `cloudrobo robot list --name <name>` or `cloudrobo robot show --robot-id <id>` to
    confirm registration and current status.
@@ -116,8 +118,7 @@ Scenario: "Is my inspection robot online?" / "List all robots in this workspace.
 Scenario: "Rename robot X" / "Update its description."
 
 1. **Confirm the robot** — `cloudrobo robot show --robot-id <id>` to verify it exists and get current metadata.
-2. **Update** — `cloudrobo robot update --robot-id <id> [--name <name>] [--description <desc>] \
-   [--workspace-id <ws>]`. Confirm before executing (mutating operation).
+2. **Update** — `cloudrobo robot update --robot-id <id> [--name <name>] [--description <desc>] [--workspace-id <ws>]`. Confirm before executing (mutating operation).
 3. **Verify** — `cloudrobo robot show --robot-id <id>` to confirm the field changed.
 
 ### Certificate / Access-Config Export Workflow (module + security)
@@ -176,8 +177,7 @@ Scenario: "Register a robot, deploy a perception model as an inference service, 
 2. Confirm the robot is online (`robot show --robot-id <id>`).
 3. Deploy the model as an inference service via `cloudrobo-infer` (`infer deploy-and-wait`);
    record the `service_id` / `exec_model_id`.
-4. Pass the `robot_id` and model to `robo-dispatcher`: `cloudrobo dispatch create-task --session-id <sid> \
-   --name <name> --task "<task>" --constraints-json '{"model":{"exec_model_id":"<exec_model_id>"},"robot_id":"<robot_id>","exec_constraints":{"max_run_time":10,"max_iter_num":100}}'`.
+4. Pass the `robot_id` and model to `robo-dispatcher`: `cloudrobo dispatch create-task --session-id <sid> --name <name> --task "<task>" --constraints-json '{"model":{"exec_model_id":"<exec_model_id>"},"robot_id":"<robot_id>","exec_constraints":{"max_run_time":10,"max_iter_num":100}}'`.
    > This skill does not call cloudrobo-infer/dispatch by name; the agent orchestrates across
    > skills by first obtaining the robot_id here, then using the infer and dispatch skills.
 
@@ -217,14 +217,7 @@ cloudrobo robot <command> [OPTIONS]
 ### Create / Register a Robot
 
 ```bash
-cloudrobo robot create \
-  --name <robot-name> \
-  --type HUMANOID \
-  --manufacturer "Manufacturer A" \
-  --robot-model "Model X" \
-  --workspace-id <workspace-id> \
-  [--description "inspection robot"] \
-  [--dry-run]
+cloudrobo robot create --name <robot-name> --type HUMANOID --manufacturer "Manufacturer A" --robot-model "Model X" --workspace-id <workspace-id> [--description "inspection robot"] [--dry-run]
 ```
 
 ```python
@@ -293,11 +286,7 @@ client.delete_robot("<robot-id>")
 ### Export Robot Access Config / Certificate
 
 ```bash
-cloudrobo robot export-certificate \
-  --robot-id <robot-id> \
-  [--password <password>] \
-  --output <directory> \
-  [--dry-run]
+cloudrobo robot export-certificate --robot-id <robot-id> [--password <password>] --output <directory> [--dry-run]
 # Output: <directory>/cert_config_{robot_name}_{timestamp}.zip
 ```
 

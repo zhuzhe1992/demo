@@ -35,6 +35,12 @@ export HUAWEI_CLOUD_AK="your-access-key-id"
 export HUAWEI_CLOUD_SK="your-secret-access-key"
 ```
 
+```powershell
+# PowerShell
+$env:HUAWEI_CLOUD_AK="your-access-key-id"
+$env:HUAWEI_CLOUD_SK="your-secret-access-key"
+```
+
 > **Security reminder:** Never hardcode AK/SK in scripts. Use environment variables or IAM roles. Do not pass credentials via CLI configuration commands with plaintext.
 
 ## Getting AK/SK

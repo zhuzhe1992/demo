@@ -20,7 +20,10 @@ tags:
   - model-inference
 ---
 
-# cloudrobo-infer
+> **Windows / PowerShell:** Examples use bash syntax. To run on Windows PowerShell:
+> - Flatten `\` line continuations to a single line, or end lines with a backtick.
+> - Set env vars with `$env:NAME="value"` instead of `export NAME="value"`.
+> - Single-quoted JSON `'{"a":"b"}'` works as-is.
 
 ## Overview
 
@@ -217,15 +220,7 @@ full command → execute.**
 
    **Variant A — embodiment plaza model (具身广场, required core parameters ONLY):**
    ```bash
-   cloudrobo infer create \
-     --name <service-name> \
-     --flavor "<flavor>" \
-     --model-json '{"model_id": "<asset_id>", "model_version_id": "<latest_version_id>"}' \
-     --workspace-id <workspace_id> \
-     --pool-id pool-<resource_id> \
-     --pool-type <pool_type> \
-     --stop-schedule-json '{"duration": 60, "time_unit": "MINUTES"}' \
-     [--dry-run]
+   cloudrobo infer create --name <service-name> --flavor "<flavor>" --model-json '{"model_id": "<asset_id>", "model_version_id": "<latest_version_id>"}' --workspace-id <workspace_id> --pool-id pool-<resource_id> --pool-type <pool_type> --stop-schedule-json '{"duration": 60, "time_unit": "MINUTES"}' [--dry-run]
    ```
    - **Do NOT add** `--cmd`/`--image-swr-url`/`--envs-json`/`--skill-config-json`/
      `--service-invoke-json`/`--readiness-health-json`/`--model-ext-metadata`/`--model-json.mount_path`.
@@ -234,22 +229,7 @@ full command → execute.**
 
    **Variant B — space asset / custom model (空间资产/自定义, with auto-discovered params):**
    ```bash
-   cloudrobo infer create \
-     --name <service-name> \
-     --flavor "<flavor>" \
-     --model-json '{"model_id": "<asset_id>", "model_version_id": "<latest_version_id>", "mount_path": "<mount_path>"}' \
-     --workspace-id <workspace_id> \
-     --pool-id pool-<resource_id> \
-     --pool-type <pool_type> \
-     --stop-schedule-json '{"duration": 60, "time_unit": "MINUTES"}' \
-     [--cmd "<command>"] \
-     [--image-swr-url "<image_url>"] \
-     [--envs-json '{"KEY":"VALUE"}'] \
-     [--skill-config-json '{"skills":[{"name":"...","prompt":"..."}],"strict":true}'] \
-     [--service-invoke-json '{"auth_type":"...","port":8080,"protocol":"HTTP"}'] \
-     [--readiness-health-json '{"path":"/ready","port":8080}'] \
-     [--model-ext-metadata '<r2c_config_file_content>'] \
-     [--dry-run]
+   cloudrobo infer create --name <service-name> --flavor "<flavor>" --model-json '{"model_id": "<asset_id>", "model_version_id": "<latest_version_id>", "mount_path": "<mount_path>"}' --workspace-id <workspace_id> --pool-id pool-<resource_id> --pool-type <pool_type> --stop-schedule-json '{"duration": 60, "time_unit": "MINUTES"}' [--cmd "<command>"] [--image-swr-url "<image_url>"] [--envs-json '{"KEY":"VALUE"}'] [--skill-config-json '{"skills":[{"name":"...","prompt":"..."}],"strict":true}'] [--service-invoke-json '{"auth_type":"...","port":8080,"protocol":"HTTP"}'] [--readiness-health-json '{"path":"/ready","port":8080}'] [--model-ext-metadata '<r2c_config_file_content>'] [--dry-run]
    ```
    - Only include parameters that were actually discovered (Step 5); omit undiscovered ones.
    - `--model-json.mount_path` only included when algorithm's `deployment_config` provides it.

@@ -75,18 +75,10 @@ The bundle is produced by the `robot` skill:
 
 ```bash
 # 1. Register the robot (if not already registered)
-cloudrobo robot create \
-  --name <robot-name> \
-  --type HUMANOID \
-  --manufacturer <mfg> \
-  --robot-model <model> \
-  --workspace-id <workspace-id>
+cloudrobo robot create --name <robot-name> --type HUMANOID --manufacturer <mfg> --robot-model <model> --workspace-id <workspace-id>
 
 # 2. Export the credential bundle (produces a zip file)
-cloudrobo robot export-certificate \
-  --robot-id <robot-id> \
-  --password <encryption-password> \
-  --output ./credential_bundle.zip
+cloudrobo robot export-certificate --robot-id <robot-id> --password <encryption-password> --output ./credential_bundle.zip
 ```
 
 The credential bundle contains:
@@ -129,6 +121,12 @@ certificate export). Set these environment variables:
 ```bash
 export HUAWEI_CLOUD_AK="your-access-key"
 export HUAWEI_CLOUD_SK="your-secret-key"
+```
+
+```powershell
+# PowerShell
+$env:HUAWEI_CLOUD_AK="your-access-key"
+$env:HUAWEI_CLOUD_SK="your-secret-key"
 ```
 
 ### Data Plane (mTLS credential bundle)

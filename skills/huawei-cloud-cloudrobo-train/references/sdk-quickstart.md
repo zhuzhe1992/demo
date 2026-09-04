@@ -351,8 +351,8 @@ print(result)
 import time
 
 terminal_states = {
-    "FINISHED", "FAILED", "RUN_FAILED", "SUBMIT_FAILED",
-    "STOPPED", "STOP_FAILED", "DELETED", "DELETE_FAILED",
+    "FINISHED", "FAILED", "RUN_FAILED", "CREATE_FAILED",
+    "STOPPED", "STOP_FAILED", "DELETE_FAILED",
     "NOT_EXIST", "ABNORMAL"
 }
 

@@ -57,6 +57,12 @@ export HUAWEI_CLOUD_AK="<your-ak>"
 export HUAWEI_CLOUD_SK="<your-sk>"
 ```
 
+```powershell
+# PowerShell
+$env:HUAWEI_CLOUD_AK="<your-ak>"
+$env:HUAWEI_CLOUD_SK="<your-sk>"
+```
+
 Or edit `~/.cloudrobo/config.yaml`:
 
 ```yaml
